@@ -20,4 +20,6 @@ samples, guidance on mobile development, and a full API reference.
 -> Users identificam um range para o qual querem ser notificados se uma atividade aparecer
 -> Users definem os topicos para os quais querem ser alertados (apanha de lixo, reflorestação,...)
 -> Sistema de pontos, em que quem fizer mais recebe uma homenagem.
+
+Features:
  
