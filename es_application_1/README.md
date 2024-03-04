@@ -21,5 +21,35 @@ samples, guidance on mobile development, and a full API reference.
 -> Users definem os topicos para os quais querem ser alertados (apanha de lixo, reflorestação,...)
 -> Sistema de pontos, em que quem fizer mais recebe uma homenagem.
 
-Features:
- 
+## Features:
+
+1. **Displaying Sustainability Activities:**
+   - Users can view a curated list of sustainability activities happening in their region.
+
+2. **Advanced Filtering:**
+   - Users can filter activities based on type, date, location, and other customizable criteria to find events that align with their interests.
+
+3. **Media Integration:**
+   - Users can view photos and videos associated with each activity to get a better understanding of what to expect.
+
+4. **Personalized Notifications:**
+   - The app notifies users about new activities matching their interests and preferences, ensuring they stay updated on relevant events.
+
+5. **Customizable Notifications:**
+   - Users have the flexibility to customize their notification settings based on activity type, location, and other preferences.
+
+6. **Reward System:**
+   - Users earn rewards for participating in sustainability activities, encouraging continued engagement and contribution to the community.
+
+7. **User Ranking:**
+   - The app ranks users based on their participation points, fostering healthy competition and recognition among the community.
+
+8. **Incentives and Rewards:**
+   - Users with high participation points receive incentives and rewards as a token of appreciation for their contributions.
+
+9. **Community Engagement:**
+   - The app facilitates connections among users, allowing them to engage in discussions and collaborate on sustainability initiatives.
+
+10. **Sustainability Tips:**
+    - Users receive helpful tips and advice on living more sustainably, empowering them to make eco-friendly choices in their daily lives.
+
