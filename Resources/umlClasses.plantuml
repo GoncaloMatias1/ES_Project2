@@ -1,0 +1,54 @@
+@startuml App
+
+class User {
+    - id: int
+    - username: string
+    - email: string
+    - password: string
+    - participationPoints: int
+}
+
+class Preferences {
+    - id: int
+}
+
+class Range {
+    - id: int
+    - value: string
+}
+
+class AreaOfInterest {
+    - id: int
+    - value: string
+}
+
+class Post {
+    - id: int
+    - title: string
+    - content: string
+    - author: User
+    + addSubscriber(user: User): void
+}
+
+class News {
+    - id: int
+    - title: string
+    - link: string
+}
+
+class Notification {
+    - id: int
+    - content: string
+    - user: User
+}
+
+
+User "*" -- "*" News
+User "1" -- "*" Post: creates
+User "*" -- "*" Post: liked
+User "*" -- "*" Notification: receives
+User "*" -- "1" Preferences
+Preferences "*" -- "1" Range
+Preferences "*" -- "1..4" AreaOfInterest
+
+@enduml

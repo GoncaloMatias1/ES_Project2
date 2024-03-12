@@ -1,0 +1,29 @@
+@startuml App
+
+left to right direction
+skinparam packageStyle rectangle
+
+actor User as U
+actor System as S
+
+rectangle "Sustainability App" {
+    usecase "Selecionar Preferências" as SelectPreferences
+    usecase "Criar Post" as CreatePost
+    usecase "Ler Post" as ReadPost
+    usecase "Subscrever a Post" as SubscribeToPost
+    usecase "Ler Notícias" as ReadNews
+    usecase "Acumular Pontos" as AccumulatePoints
+
+    U --> SelectPreferences: Seleciona preferências
+    U --> CreatePost: Cria post
+    U --> ReadPost: Lê post
+    U --> SubscribeToPost: Subscreve a post
+    U --> ReadNews: Lê notícias
+    U --> AccumulatePoints: Acumula pontos
+
+    ReadPost <-- S: Verifica permissões
+    SubscribeToPost <-- S: Verifica disponibilidade
+    AccumulatePoints <-- S: Atualiza pontos
+}
+
+@enduml
