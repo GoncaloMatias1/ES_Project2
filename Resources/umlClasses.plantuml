@@ -1,54 +1,53 @@
 @startuml App
-
+'Location stores the coordinates'
 class User {
-    - id: int
-    - username: string
+    - firstName: string
+    - lastName: string
     - email: string
     - password: string
-    - participationPoints: int
-}
-
-class Preferences {
-    - id: int
-}
-
-class Range {
-    - id: int
-    - value: string
+    - points: int
+    - range: int
+    - picture: file
+    - location: string
+    + changeProfile(): void
+    + changeLocation(): void
+    + createNews(): void
 }
 
 class AreaOfInterest {
-    - id: int
     - value: string
 }
 
 class Post {
-    - id: int
     - title: string
     - content: string
-    - author: User
+    - likes: int
+    - dateCreated: Date
+    - dateEvent: Date
+    - location: string
     + addSubscriber(user: User): void
+    + removeSubscriber(user: User): void
 }
 
 class News {
-    - id: int
     - title: string
     - link: string
 }
 
 class Notification {
-    - id: int
     - content: string
     - user: User
 }
 
 
 User "*" -- "*" News
+'A post can have more than one creator'
 User "1" -- "*" Post: creates
 User "*" -- "*" Post: liked
 User "*" -- "*" Notification: receives
-User "*" -- "1" Preferences
-Preferences "*" -- "1" Range
-Preferences "*" -- "1..4" AreaOfInterest
+User "*" -- "1..4" AreaOfInterest
+Post "*" -- "1..4" AreaOfInterest
+User "*" -- "*" Post: subscribs
+User "*" -- "*" Post: participated
 
 @enduml
