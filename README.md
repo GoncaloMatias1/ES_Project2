@@ -58,12 +58,14 @@ Notifications will also be shown to users regarding activities that will take pl
 
 ### Logical Architeture
 
-![Logical Architeture](images/imageAL.png)
 * Text descriptions
+
+![Logical Architeture](images/imageAL.png)
 
 ### Physical Architeture
 
-![Physical Architeture](images/imageAF.png)
 * Text descriptions
+
+![Physical Architeture](images/imageAF.png)
 
 ### Vertical Prototype
