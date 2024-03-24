@@ -4,14 +4,12 @@ class User {
     - firstName: string
     - lastName: string
     - email: string
+    - birthdate: string
     - password: string
     - points: int
     - range: int
     - picture: file
     - location: string
-    + changeProfile(): void
-    + changeLocation(): void
-    + createNews(): void
 }
 
 class AreaOfInterest {
@@ -25,12 +23,11 @@ class Post {
     - dateCreated: Date
     - dateEvent: Date
     - location: string
-    + addSubscriber(user: User): void
-    + removeSubscriber(user: User): void
 }
 
 class News {
     - title: string
+    - description: string
     - link: string
 }
 
@@ -40,6 +37,7 @@ class Notification {
 }
 
 
+User "*" -- "*" User: friend
 User "*" -- "*" News
 'A post can have more than one creator'
 User "1" -- "*" Post: creates
@@ -47,7 +45,7 @@ User "*" -- "*" Post: liked
 User "*" -- "*" Notification: receives
 User "*" -- "1..4" AreaOfInterest
 Post "*" -- "1..4" AreaOfInterest
-User "*" -- "*" Post: subscribs
+User "*" -- "*" Post: subscribed
 User "*" -- "*" Post: participated
 
 @enduml
