@@ -52,7 +52,7 @@ Posts are associated with up to four areas of interest to make it easier for eac
 Users have the ability to share news they have found interesting, always related to the purpose of the application. These shares can be viewed on a specific page.
 Notifications will also be shown to users regarding activities that will take place.
 
-![Domain model](images/domainmodel.png)
+![Domain model](images/image.png)
 
 ## Architecture and Design
 
