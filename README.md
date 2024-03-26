@@ -1,4 +1,4 @@
-# \<name of the app> Development Report
+# EcoMobilize Development Report
 
 Here, you can discover the insight of our product, spanning from its general vision to some of the implementation details. This serves as a Software Development Report, organized by activities:
 
@@ -46,10 +46,10 @@ The application aims to encourage the public to engage in environmentally benefi
 
 ### Domain Model
 
-This domain model gives us the relationships between users, posts, notifications and areas of interest of the application.
-Each user can create a post and subscribe to posts from other users to demonstrate interest in participating in the activities mentioned. The presence of a particular user in the subscribed activity is subsequently recorded by the author of the post. This is represented through the "participated" relationship. Each user also has the option to simply like a post.
-Posts are associated with up to four areas of interest to make it easier for each user to find the activities that interest them the most. To enable this filtering, each user can also define four areas of interest in their profile.
-Users have the ability to share news they have found interesting, always related to the purpose of the application. These shares can be viewed on a specific page.
+This domain model gives us the relationships between users, posts, notifications, news  and areas of interest of the application.
+Each user can create a post and subscribe to posts from other users to participate in the activities mentioned. The presence of a particular user in the subscribed activity is confirmed  by the author of the post. This is represented through the "participated" relationship. Each user also has the option to simply like a post and establish a friendship relation with another user.
+Posts are associated with up to four areas of interest to make it easier for each user to find the activities that interest them the most. Each user defines, at most, four areas of interest in their profile, which will be used in the activity filtering process.
+Users have the ability to share news they have found interesting, always related to the purpose of the application. These shares can be viewed on the user profile.
 Notifications will also be shown to users regarding activities that will take place.
 
 ![Domain model](images/image.png)
@@ -58,14 +58,17 @@ Notifications will also be shown to users regarding activities that will take pl
 
 ### Logical Architeture
 
-* Text descriptions
+* Our app's logical architecture consists of layers for user interface, app management logic, external services, and databases access. The user interface layer handles user interactions, while the app management logic provides core functionalities like ranking, post, user, and activity management. External services enhance our app's capabilities.
 
 ![Logical Architeture](images/imageAL.png)
 
 ### Physical Architeture
 
-* Text descriptions
+* Our system's physical architecture comprises three main components: the Smartphone, the AppServer, and the GoogleServer. The smartphone hosts the Flutter app with a local SQL database for offline data storage. The AppServer hosts the application logic and database using Dart language and a NoSQL database, while the GoogleServer provides GPS Services API for location-related functionalities. This architecture enables efficient communication between the user's device, the application server, and external services for a seamless user experience.
 
 ![Physical Architeture](images/imageAF.png)
 
 ### Vertical Prototype
+ * The Vertical Prototypes shows both usages of Firebase and Google Maps API's.
+ 
+![APK](APK/app-release.apk)
