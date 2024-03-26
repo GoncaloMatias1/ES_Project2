@@ -23,7 +23,7 @@ package "Deployment View" {
         artifact "Activities Management Logic (Dart)" as ACTM {
         }
 
-        database "Database (SQL)" as database {
+        database "Database (NoSQL)" as database {
         }
 
         AppUI ..> ACTM
