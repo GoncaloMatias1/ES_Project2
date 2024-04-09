@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'register_screen.dart'; // Asegure-se de que este arquivo exista com o código atualizado que fornecerei.
+import 'welcome_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const RegisterScreen(), // Direciona diretamente para a tela de registro
+      home: const WelcomeScreen(),
     );
   }
 }
