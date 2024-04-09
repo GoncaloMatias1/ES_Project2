@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'register_screen.dart';
+import 'login_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -42,8 +43,8 @@ class WelcomeScreen extends StatelessWidget {
               },
               child: const Text('Create Account'),
               style: ElevatedButton.styleFrom(
-                primary: Colors.green[800],
-                onPrimary: Colors.white,
+                backgroundColor: Colors.green[800],
+                foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 textStyle: const TextStyle(fontSize: 20),
               ),
@@ -51,11 +52,12 @@ class WelcomeScreen extends StatelessWidget {
             const SizedBox(height: 24.0),
             ElevatedButton(
               onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LoginScreen()));
               },
               child: const Text('I already have an account'),
               style: ElevatedButton.styleFrom(
-                primary: Colors.white,
-                onPrimary: Colors.green[800],
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.green[800],
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 textStyle: const TextStyle(fontSize: 20),
               ),
