@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'main_page.dart'; // Replace 'your_project_name' with your actual project name
+import 'main_page.dart';
+import 'set_location.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -30,7 +31,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       // Navigate to MainPage
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MainPage()),
+        MaterialPageRoute(builder: (context) => AskDistance()),
       );
     } catch (e) {
       print('Failed to register user: $e');
