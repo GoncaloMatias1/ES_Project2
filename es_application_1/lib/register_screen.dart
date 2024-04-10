@@ -1,8 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'main_page.dart'; // Replace 'your_project_name' with your actual project name
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
+
+  @override
+  _RegisterScreenState createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  Future<void> _registerUser() async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+
+      // If registration is successful, save email and password to local storage
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('email', _emailController.text);
+      prefs.setString('password', _passwordController.text);
+
+      // Navigate to MainPage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MainPage()),
+      );
+    } catch (e) {
+      print('Failed to register user: $e');
+      // Handle registration failure
+      // You can show an error message to the user here
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +72,7 @@ class RegisterScreen extends StatelessWidget {
               ),
               const SizedBox(height: 48.0),
               TextFormField(
+                controller: _emailController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey[200],
@@ -51,6 +87,7 @@ class RegisterScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16.0),
               TextFormField(
+                controller: _passwordController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey[200],
@@ -67,8 +104,7 @@ class RegisterScreen extends StatelessWidget {
               const SizedBox(height: 32.0),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                  },
+                  onPressed: _registerUser,
                   child: const Text('Register'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green[800],

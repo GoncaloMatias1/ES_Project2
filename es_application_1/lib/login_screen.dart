@@ -1,8 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'main_page.dart'; // Replace 'your_project_name' with your actual project name
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  Future<void> _loginUser() async {
+    final String email = _emailController.text.trim();
+    final String password = _passwordController.text.trim();
+
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      // Store email and password in local storage
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('email', email);
+      await prefs.setString('password', password);
+
+      // If login is successful, navigate to MainPage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MainPage()),
+      );
+    } catch (e) {
+  print('Failed to login: $e');
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Login Failed'),
+        content: Text('Invalid email or password. Please try again.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +86,7 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24.0),
               TextFormField(
+                controller: _emailController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey[200],
@@ -46,6 +101,7 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16.0),
               TextFormField(
+                controller: _passwordController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey[200],
@@ -61,8 +117,7 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 32.0),
               ElevatedButton(
-                onPressed: () {
-                },
+                onPressed: _loginUser,
                 child: const Text('Login'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green[800],
@@ -76,6 +131,7 @@ class LoginScreen extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
+                  // Implement Forgot Password functionality
                 },
                 child: const Text('Forgot Password?'),
                 style: TextButton.styleFrom(
