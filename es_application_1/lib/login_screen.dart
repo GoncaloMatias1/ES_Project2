@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'main_page.dart'; // Replace 'your_project_name' with your actual project name
+import 'main_page.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -135,7 +135,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 child: const Text('Forgot Password?'),
                 style: TextButton.styleFrom(
-                  backgroundColor: Colors.green[800],
                   textStyle: const TextStyle(fontSize: 16),
                 ),
               ),
