@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
+import 'onboarding_screen.dart';
 import 'welcome_screen.dart';
 import 'main_page.dart';
 
@@ -14,19 +13,6 @@ void main() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final String? storedEmail = prefs.getString('email');
   final String? storedPassword = prefs.getString('password');
-
-  if (storedEmail != null && storedPassword != null) {
-    try {
-      // Attempt to sign in with stored credentials
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: storedEmail,
-        password: storedPassword,
-      );
-    } catch (e) {
-      // Handle any errors during auto-login attempt
-      print('Auto-login failed: $e');
-    }
-  }
 
   runApp(MyApp(storedEmail: storedEmail, storedPassword: storedPassword));
 }
@@ -41,6 +27,29 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final isLoggedIn = storedEmail != null && storedPassword != null;
 
+    Widget _initialScreen;
+    if (isLoggedIn) {
+      _initialScreen = MainPage();
+    } else {
+      final seenOnboarding = SharedPreferences.getInstance()
+          .then((prefs) => prefs.getBool('seenOnboarding') ?? false);
+
+      _initialScreen = FutureBuilder<bool>(
+        future: seenOnboarding,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.data == false) {
+              return OnboardingScreen();
+            } else {
+              return WelcomeScreen();
+            }
+          } else {
+            return CircularProgressIndicator();
+          }
+        },
+      );
+    }
+
     return MaterialApp(
       title: 'EcoMobilize',
       theme: ThemeData(
@@ -50,8 +59,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      // Navigate based on login state
-      home: isLoggedIn ? MainPage() : const WelcomeScreen(),
+      home: _initialScreen,
     );
   }
 }
