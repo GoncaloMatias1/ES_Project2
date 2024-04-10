@@ -79,7 +79,7 @@ class LoginScreen extends StatelessWidget {
                 },
                 child: const Text('Forgot Password?'),
                 style: TextButton.styleFrom(
-                  primary: Colors.green[800],
+                  backgroundColor: Colors.green[800],
                   textStyle: const TextStyle(fontSize: 16),
                 ),
               ),
