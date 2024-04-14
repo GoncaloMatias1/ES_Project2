@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "781512350014",
+    "project_id": "ltw-app-72333",
+    "storage_bucket": "ltw-app-72333.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:781512350014:android:1678a9856829398b91746f",
+        "android_client_info": {
+          "package_name": "com.example.es_application_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJQvCRB9GSqUvXcDbUT2GU411HPL5TCKM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
