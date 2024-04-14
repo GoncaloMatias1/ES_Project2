@@ -17,28 +17,59 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _registerUser() async {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  try {
+    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+
+    // Send email verification
+    await userCredential.user!.sendEmailVerification();
+
+    // If registration is successful, save email and password to local storage
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('email', _emailController.text);
+    prefs.setString('password', _passwordController.text);
+
+    // Show dialog informing the user to verify their email
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Registration Successful'),
+          content: Text('A verification email has been sent to ${_emailController.text}. Please verify your email before logging in.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+
+    // Check if email is verified before allowing access to the app
+    while (!userCredential.user!.emailVerified) {
+      await Future.delayed(Duration(seconds: 2));
+      userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
-
-      // If registration is successful, save email and password to local storage
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('email', _emailController.text);
-      prefs.setString('password', _passwordController.text);
-
-      // Navigate to MainPage
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => AskDistance()),
-      );
-    } catch (e) {
-      print('Failed to register user: $e');
-      // Handle registration failure
-      // You can show an error message to the user here
     }
+
+    // Navigate to MainPage if email is verified
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => MainPage()),
+    );
+  } catch (e) {
+    print('Failed to register user: $e');
+
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
