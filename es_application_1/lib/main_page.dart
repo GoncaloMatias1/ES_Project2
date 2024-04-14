@@ -1,5 +1,7 @@
+import 'package:es_application_1/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'profile_page.dart';
 import 'welcome_screen.dart';
 
 class MainPage extends StatelessWidget {
@@ -28,9 +30,12 @@ class MainPage extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Text(
-          'Welcome',
-          style: TextStyle(fontSize: 24),
+        child: ElevatedButton(
+          onPressed: (){
+            Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => ProfilePage()));
+          },child: Text("Profile"),
         ),
       ),
     );
