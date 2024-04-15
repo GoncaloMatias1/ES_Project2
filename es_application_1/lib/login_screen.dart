@@ -26,6 +26,11 @@ class _LoginScreenState extends State<LoginScreen> {
         password: password,
       );
 
+      // Check if the user's email is verified
+      if (!userCredential.user!.emailVerified) {
+        throw 'Email not verified';
+      }
+
       // Store email and password in local storage
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('email', email);

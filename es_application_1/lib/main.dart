@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'onboarding_screen.dart';
 import 'welcome_screen.dart';
@@ -25,12 +26,34 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget _initialScreen;
+
     final isLoggedIn = storedEmail != null && storedPassword != null;
 
-    Widget _initialScreen;
     if (isLoggedIn) {
-      _initialScreen = MainPage();
+      // Check if the stored credentials are valid
+      _initialScreen = FutureBuilder(
+        future: FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: storedEmail!,
+          password: storedPassword!,
+        ),
+        builder: (BuildContext context, AsyncSnapshot<UserCredential> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else {
+            if (snapshot.hasError) {
+              // If sign-in fails, the stored credentials are invalid
+              return WelcomeScreen();
+            } else {
+              // If sign-in is successful, the stored credentials are valid
+              return MainPage();
+            }
+          }
+        },
+      );
     } else {
+      // If there are no stored credentials, show the onboarding or welcome screen
+      // depending on whether the user has seen the onboarding screen before
       final seenOnboarding = SharedPreferences.getInstance()
           .then((prefs) => prefs.getBool('seenOnboarding') ?? false);
 
