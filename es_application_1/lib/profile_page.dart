@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'main_page.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -29,6 +30,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Profile'),
+        backgroundColor: Colors.green,
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -50,60 +55,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: TextStyle(fontSize: 18, color: Colors.green),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+              },
               child: Text(
                 'Edit Profile',
                 style: TextStyle(color: Colors.green),
               ),
             ),
             SizedBox(height: 20),
-            Column(
-              children: [
-                Text(
-                  'Email Notifications: ${receiveEmailNotifications ? 'On' : 'Off'}',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'System Notifications : ${ systemNotifications ? 'On': 'Off'}',
-                  style : TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Only Near Activities : ${ onlyNear ? 'On': 'Off'}',
-                  style : TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
+            Text(
+              'Email Notifications: ${receiveEmailNotifications ? 'On' : 'Off'}',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'System Notifications : ${systemNotifications ? 'On' : 'Off'}',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Only Near Activities : ${onlyNear ? 'On' : 'Off'}',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 30),
-            Column(
-              children: [
-                Text(
-                  'Activity: ${lastTimeOn ? 'On' : 'Off'}',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Profile Photo : ${ profilePhoto ? 'On': 'Off'}',
-                  style : TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'My favourites : ${ favourites ? 'On': 'Off'}',
-                  style : TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
+            Text(
+              'Activity: ${lastTimeOn ? 'On' : 'Off'}',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Profile Photo : ${profilePhoto ? 'On' : 'Off'}',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'My favourites : ${favourites ? 'On' : 'Off'}',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 30),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+              },
               child: Text(
                 'Send feedback',
                 style: TextStyle(color: Colors.green),
               ),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+              },
               child: Text(
                 'Delete account',
                 style: TextStyle(color: Colors.red),
@@ -113,12 +113,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.green, // Set the background color of the bottom app bar to green
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: IconButton(
-            icon: Icon(Icons.home, color: Colors.white), onPressed: () {  }, // Icon for returning home
-          ),
+        color: Colors.green,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainPage()),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: Icon(
+                    Icons.home,
+                    color: Colors.green,
+                    size: 30.0,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
