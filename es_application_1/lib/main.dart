@@ -42,18 +42,16 @@ class MyApp extends StatelessWidget {
             return CircularProgressIndicator();
           } else {
             if (snapshot.hasError) {
-              // If sign-in fails, the stored credentials are invalid
+              // Stored credentials are invalid
               return WelcomeScreen();
             } else {
-              // If sign-in is successful, the stored credentials are valid
+              // Stored credentials are valid
               return MainPage();
             }
           }
         },
       );
     } else {
-      // If there are no stored credentials, show the onboarding or welcome screen
-      // depending on whether the user has seen the onboarding screen before
       final seenOnboarding = SharedPreferences.getInstance()
           .then((prefs) => prefs.getBool('seenOnboarding') ?? false);
 
