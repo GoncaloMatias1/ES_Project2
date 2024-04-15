@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'profile_page.dart';
 import 'welcome_screen.dart';
+import 'favorites_page.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -40,6 +41,10 @@ class MainPage extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
                 onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => FavoritesPage()),
+                  );
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
@@ -48,13 +53,14 @@ class MainPage extends StatelessWidget {
                     color: Colors.white,
                   ),
                   child: Icon(
-                    Icons.menu,
+                    Icons.favorite,
                     color: Colors.green,
                     size: 30.0,
                   ),
                 ),
               ),
             ),
+            Container(width: 48.0),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: InkWell(

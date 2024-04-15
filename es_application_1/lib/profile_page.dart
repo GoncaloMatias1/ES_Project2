@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'main_page.dart';
+import 'favorites_page.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -103,6 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             ElevatedButton(
               onPressed: () {
+                // Delete account functionality
               },
               child: Text(
                 'Delete account',
@@ -134,6 +136,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   child: Icon(
                     Icons.home,
+                    color: Colors.green,
+                    size: 30.0,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => FavoritesPage()),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: Icon(
+                    Icons.favorite,
                     color: Colors.green,
                     size: 30.0,
                   ),
