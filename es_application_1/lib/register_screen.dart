@@ -15,6 +15,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _passwordVisible = false;
 
   Future<void> _registerUser() async {
   try {
@@ -129,9 +130,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     borderRadius: BorderRadius.all(Radius.circular(12)),
                   ),
                   prefixIcon: const Icon(Icons.lock, color: Colors.green),
-                  suffixIcon: const Icon(Icons.visibility_off, color: Colors.green),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.green,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _passwordVisible = !_passwordVisible;
+                      });
+                    },
+                  ),
                 ),
-                obscureText: true,
+                obscureText: !_passwordVisible,
               ),
               const SizedBox(height: 32.0),
               Center(
