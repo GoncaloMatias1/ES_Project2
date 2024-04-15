@@ -14,6 +14,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _passwordVisible = false;
 
   Future<void> _loginUser() async {
     final String email = _emailController.text.trim();
@@ -24,6 +25,11 @@ class _LoginScreenState extends State<LoginScreen> {
         email: email,
         password: password,
       );
+
+      // Check if the user's email is verified
+      if (!userCredential.user!.emailVerified) {
+        throw 'Email not verified';
+      }
 
       // Store email and password in local storage
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -156,9 +162,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   prefixIcon: const Icon(Icons.lock, color: Colors.green),
-                  suffixIcon: const Icon(Icons.visibility_off, color: Colors.green),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.green,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _passwordVisible = !_passwordVisible;
+                      });
+                    },
+                  ),
                 ),
-                obscureText: true,
+                obscureText: !_passwordVisible,
               ),
               const SizedBox(height: 32.0),
               ElevatedButton(

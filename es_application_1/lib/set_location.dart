@@ -29,16 +29,15 @@ class _AskDistanceState extends State<AskDistance> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
-        // Handle the case when the user denied or permanently denied the permission
+        // Missing logic if user denies
         return;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // Handle the case when the user permanently denied the permission
+      // Missing logic when user denied forever
       return;
     }
-
     _getCurrentLocation();
   }
 
@@ -82,7 +81,7 @@ class _AskDistanceState extends State<AskDistance> {
       _markers.clear(); // Clear existing markers
       _selectedLocation = null; // Reset selected location
 
-      // Fetch current location
+      // Get current location
       _checkPermissionAndGetCurrentLocation().then((_) {
         // Set marker at the current location
         if (_currentLocation != null) {
