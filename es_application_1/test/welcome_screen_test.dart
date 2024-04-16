@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../lib/welcome_screen.dart';
-import '../lib/register_screen.dart';
-import '../lib/login_screen.dart';
+import '../lib/authentication/register_screen.dart';
+import '../lib/authentication/login_screen.dart';
 
 void main() {
   testWidgets('Widget displays correctly', (WidgetTester tester) async {

@@ -1,4 +1,4 @@
-import 'package:es_application_1/register_screen.dart';
+import 'package:es_application_1/authentication/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
