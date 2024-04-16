@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'favorites_page.dart';
 import 'main_page.dart';
 
@@ -12,7 +14,37 @@ class FeedbackScreen extends StatefulWidget {
 
 class _FeedbackScreenState extends State<FeedbackScreen> {
   final TextEditingController _feedbackController = TextEditingController();
-  bool _passwordVisible = false;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  Future<void> _sendFeedback() async {
+    final String feedback = _feedbackController.text.trim();
+    if (feedback.isNotEmpty){
+      try {
+
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('feedback', feedback);
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Your feedback has been sent successfully!'),
+          backgroundColor: Colors.green[800],
+        ));
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Failed to save feedback. Please try again.'),
+            backgroundColor: Colors.red,
+        ));
+        print('Error saving feedback: $e');
+      }
+    }
+    else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Please enter feedback before saving.'),
+        backgroundColor: Colors.red,
+      ));
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +92,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 ),
                 SizedBox(height: 32.0),
                 ElevatedButton(
-                  onPressed: () {
-                    print('Button pressed ...');
-                  },
+                  onPressed: _sendFeedback,
                   child: Text('Send Feedback'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green[800], // Correction here
