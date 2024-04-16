@@ -88,3 +88,6 @@ Others were practically implemented, all that remains is to add the page-switchi
 - ![Users can login to their account](es_application_1/lib/authentication/login_screen.dart)
 - ![Users can edit their profile](es_application_1/lib/profile_page.dart) -> Not fully implemented
 - ![Users can customize their settings](es_application_1/profile_page.dart) -> Not fully implemented
+
+### Current progress
+![Sprint 1 progress](images/template_sprint1.png)
