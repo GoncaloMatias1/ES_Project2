@@ -36,6 +36,10 @@ class Notification {
     - user: User
 }
 
+class Participation{
+    - participated: bool
+}
+
 
 User "*" -- "*" User: friend
 User "*" -- "*" News
@@ -46,6 +50,7 @@ User "*" -- "*" Notification: receives
 User "*" -- "1..4" AreaOfInterest
 Post "*" -- "1..4" AreaOfInterest
 User "*" -- "*" Post: subscribed
-User "*" -- "*" Post: participated
+User "*" -- "*" Post
+(User, Post) .. Participation
 
 @enduml
