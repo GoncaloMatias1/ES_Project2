@@ -72,3 +72,19 @@ Notifications will also be shown to users regarding activities that will take pl
  * The Vertical Prototypes shows both usages of Firebase and Google Maps API's.
  
 ![APK](APK/app-release.apk)
+
+
+## Sprint 1
+
+### Sumary
+ - During this sprint we managed to implement some of the planned user stories, however, as some turned out to be more complex than initially anticipated, we were not able to implement everything. 
+Others were practically implemented, all that remains is to add the page-switching logic. Now that we know what went wrong in sprint 1, we want to improve and avoid making the same mistakes.
+
+### Implemented Functionalities
+- ![Users can set a location and a distance](es_application_1/lib/set_location.dart)
+- ![Users can create an account using their email](es_application_1/lib/authentication/register_screen.dart)
+- ![Users can reset their password](es_application_1/lib/authentication/login_screen.dart)
+- ![Users can login to their account](es_application_1/lib/authentication/login_screen.dart)
+- ![Users can login to their account](es_application_1/lib/authentication/login_screen.dart)
+- ![Users can edit their profile](es_application_1/lib/profile_page.dart) -> Not fully implemented
+- ![Users can customize their settings](es_application_1/profile_page.dart) -> Not fully implemented
