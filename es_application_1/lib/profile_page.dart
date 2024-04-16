@@ -2,6 +2,7 @@ import 'package:es_application_1/send_feedback.dart';
 import 'package:flutter/material.dart';
 import 'main_page.dart';
 import 'favorites_page.dart';
+import 'deleteaccount.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -109,10 +110,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                // Delete account functionality
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => DeleteAccountScreen()),
+                );
               },
               child: Text(
-                'Delete account',
+                'Delete Account',
                 style: TextStyle(color: Colors.red),
               ),
             ),
