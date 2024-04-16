@@ -1,3 +1,4 @@
+import 'package:es_application_1/send_feedback.dart';
 import 'package:flutter/material.dart';
 import 'main_page.dart';
 import 'favorites_page.dart';
@@ -96,6 +97,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => FeedbackScreen()),
+                );
               },
               child: Text(
                 'Send feedback',
