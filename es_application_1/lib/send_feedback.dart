@@ -1,9 +1,12 @@
+import 'package:es_application_1/profile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'favorites_page.dart';
 import 'main_page.dart';
+import 'dart:async';
+
 
 class FeedbackScreen extends StatefulWidget {
   const FeedbackScreen({Key? key}) : super(key: key);
@@ -18,33 +21,41 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
   Future<void> _sendFeedback() async {
     final String feedback = _feedbackController.text.trim();
-    if (feedback.isNotEmpty){
+    if (feedback.isNotEmpty) {
       try {
+        final user = _firebaseAuth.currentUser;
+        if (user != null) {
+          final reviewsCollection = FirebaseFirestore.instance.collection('reviews');
 
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('feedback', feedback);
+          await reviewsCollection.doc(user.uid).set({
+            'feedback': feedback,
+            'timestamp': Timestamp.now(),
+          });
 
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Your feedback has been sent successfully!'),
-          backgroundColor: Colors.green[800],
-        ));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Your feedback has been sent successfully!'),
+            backgroundColor: Colors.green[800],
+          ));
+          await Future.delayed(Duration(seconds: 2));
+          Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => ProfileScreen()),
+                    );
+        }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to save feedback. Please try again.'),
-            backgroundColor: Colors.red,
+          content: Text('Failed to send feedback. Please try again.'),
+          backgroundColor: Colors.red,
         ));
-        print('Error saving feedback: $e');
+        print('Error sending feedback: $e');
       }
-    }
-    else {
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Please enter feedback before saving.'),
+        content: Text('Please enter feedback before sending.'),
         backgroundColor: Colors.red,
       ));
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +106,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   onPressed: _sendFeedback,
                   child: Text('Send Feedback'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green[800], // Correction here
+                    backgroundColor: Colors.green[800],
                     foregroundColor: Colors.white,
                     padding: EdgeInsets.symmetric(horizontal: 64.0, vertical: 20.0),
                     textStyle: TextStyle(fontSize: 20.0, fontFamily: 'Readex Pro'),

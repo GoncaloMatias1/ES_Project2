@@ -1,10 +1,11 @@
-import 'package:es_application_1/deleteaccount.dart';
 import 'package:flutter/material.dart';
 import 'favorites_page.dart';
 import 'main_page.dart';
 import 'edit_profile.dart';
 import 'send_feedback.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'welcome_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -39,6 +40,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _username = prefs.getString('username') ?? "YourUsername";
       _usernameController.text = _username;
     });
+  }
+
+  Future<void> deleteAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    try {
+      await FirebaseAuth.instance.currentUser!.delete();
+      await FirebaseAuth.instance.signOut();
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Account Successfully Deleted'),
+            content: Text('Your account has been successfully deleted.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                        (route) => false,
+                  );
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } on FirebaseAuthException catch(e) {
+      if (e.code == 'requires-recent-login') {
+        print('The user must reauthenticate before this operation can be executed.');
+      }
+    }
   }
 
   @override
@@ -127,9 +163,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => DeleteAccountScreen()),
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("Delete Account"),
+                          content: Text("Are you sure you want to delete your account?"),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("No"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                deleteAccount();
+                              },
+                              child: Text("Yes"),
+                            ),
+                          ],
+                        );
+                      },
                     );
                   },
                   child: Text(
