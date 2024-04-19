@@ -1,21 +1,12 @@
-import 'package:es_application_1/send_feedback.dart';
+import 'package:es_application_1/deleteaccount.dart';
 import 'package:flutter/material.dart';
-import 'main_page.dart';
 import 'favorites_page.dart';
-import 'deleteaccount.dart';
+import 'main_page.dart';
+import 'edit_profile.dart';
+import 'send_feedback.dart';
+import 'favorites_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfilePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Profile Page',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: ProfileScreen(),
-    );
-  }
-}
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -23,12 +14,36 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  TextEditingController _usernameController = TextEditingController();
   bool receiveEmailNotifications = true;
   bool systemNotifications = true;
   bool onlyNear = true;
   bool lastTimeOn = true;
-  bool profilePhoto = true;
+  bool profilePicture = true;
   bool favourites = true;
+  String _username = "YourUsername";
+  @override
+  void initState() {
+    super.initState();
+    loadSettings();
+  }
+
+
+  Future<void> loadSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      receiveEmailNotifications = prefs.getBool('receiveEmailNotifications') ?? true;
+      systemNotifications = prefs.getBool('systemNotifications') ?? true;
+      onlyNear = prefs.getBool('onlyNear') ?? true;
+      lastTimeOn = prefs.getBool('lastTimeOn') ?? true;
+      profilePicture = prefs.getBool('profilePhoto') ?? true;
+      favourites = prefs.getBool('favourites') ?? true;
+      _username = prefs.getString('username') ?? "YourUsername";
+      _usernameController.text = _username;
+    });
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -48,17 +63,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 shape: BoxShape.circle,
               ),
               child: CircleAvatar(
-                radius: 60,
-                backgroundImage: AssetImage('assets/profile_photo.jpg'),
+                  radius: 60
               ),
             ),
             SizedBox(height: 20),
             Text(
-              'YourUsername',
+              _username,
               style: TextStyle(fontSize: 18, color: Colors.green),
             ),
             ElevatedButton(
               onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => EditProfilePage()),
+                );
               },
               child: Text(
                 'Edit Profile',
@@ -87,7 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             SizedBox(height: 10),
             Text(
-              'Profile Photo : ${profilePhoto ? 'On' : 'Off'}',
+              'Profile Picture : ${profilePicture ? 'On' : 'Off'}',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
@@ -102,6 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   context,
                   MaterialPageRoute(builder: (context) => FeedbackScreen()),
                 );
+
               },
               child: Text(
                 'Send feedback',
@@ -114,9 +133,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   context,
                   MaterialPageRoute(builder: (context) => DeleteAccountScreen()),
                 );
+
               },
               child: Text(
-                'Delete Account',
+                'Delete account',
                 style: TextStyle(color: Colors.red),
               ),
             ),
