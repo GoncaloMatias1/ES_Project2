@@ -67,7 +67,7 @@ class MainPage extends StatelessWidget {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => ProfilePage()),
+                    MaterialPageRoute(builder: (context) => ProfileScreen()),
                   );
                 },
                 child: Container(
