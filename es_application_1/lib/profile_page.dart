@@ -1,12 +1,11 @@
-import 'package:es_application_1/deleteaccount.dart';
 import 'package:flutter/material.dart';
 import 'favorites_page.dart';
 import 'main_page.dart';
 import 'edit_profile.dart';
 import 'send_feedback.dart';
-import 'favorites_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'welcome_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -22,12 +21,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool profilePicture = true;
   bool favourites = true;
   String _username = "YourUsername";
+
   @override
   void initState() {
     super.initState();
     loadSettings();
   }
-
 
   Future<void> loadSettings() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -43,7 +42,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  Future<void> deleteAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    try {
+      await FirebaseAuth.instance.currentUser!.delete();
+      await FirebaseAuth.instance.signOut();
 
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Account Successfully Deleted'),
+            content: Text('Your account has been successfully deleted.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                        (route) => false,
+                  );
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } on FirebaseAuthException catch(e) {
+      if (e.code == 'requires-recent-login') {
+        print('The user must reauthenticate before this operation can be executed.');
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,95 +84,117 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: Text('Profile'),
         backgroundColor: Colors.green,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(height: 20),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.green, width: 2.0),
-                shape: BoxShape.circle,
-              ),
-              child: CircleAvatar(
-                  radius: 60
-              ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(height: 20),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.green, width: 2.0),
+                    shape: BoxShape.circle,
+                  ),
+                  child: CircleAvatar(
+                    radius: 60,
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  _username,
+                  style: TextStyle(fontSize: 18, color: Colors.green),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => EditProfilePage()),
+                    );
+                  },
+                  child: Text(
+                    'Edit Profile',
+                    style: TextStyle(color: Colors.green),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  'Email Notifications: ${receiveEmailNotifications ? 'On' : 'Off'}',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'System Notifications : ${systemNotifications ? 'On' : 'Off'}',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Only Near Activities : ${onlyNear ? 'On' : 'Off'}',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 30),
+                Text(
+                  'Activity: ${lastTimeOn ? 'On' : 'Off'}',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Profile Picture : ${profilePicture ? 'On' : 'Off'}',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'My favourites : ${favourites ? 'On' : 'Off'}',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => FeedbackScreen()),
+                    );
+                  },
+                  child: Text(
+                    'Send feedback',
+                    style: TextStyle(color: Colors.green),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("Delete Account"),
+                          content: Text("Are you sure you want to delete your account?"),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("No"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                deleteAccount();
+                              },
+                              child: Text("Yes"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: Text(
+                    'Delete account',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 20),
-            Text(
-              _username,
-              style: TextStyle(fontSize: 18, color: Colors.green),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => EditProfilePage()),
-                );
-              },
-              child: Text(
-                'Edit Profile',
-                style: TextStyle(color: Colors.green),
-              ),
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Email Notifications: ${receiveEmailNotifications ? 'On' : 'Off'}',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'System Notifications : ${systemNotifications ? 'On' : 'Off'}',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Only Near Activities : ${onlyNear ? 'On' : 'Off'}',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 30),
-            Text(
-              'Activity: ${lastTimeOn ? 'On' : 'Off'}',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Profile Picture : ${profilePicture ? 'On' : 'Off'}',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'My favourites : ${favourites ? 'On' : 'Off'}',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => FeedbackScreen()),
-                );
-
-              },
-              child: Text(
-                'Send feedback',
-                style: TextStyle(color: Colors.green),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => DeleteAccountScreen()),
-                );
-
-              },
-              child: Text(
-                'Delete account',
-                style: TextStyle(color: Colors.red),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(
