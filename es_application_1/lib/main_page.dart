@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'profile_page.dart';
 import 'welcome_screen.dart';
 import 'favorites_page.dart';
+import 'registration_manager/user_info.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -17,8 +20,37 @@ class MainPage extends StatelessWidget {
     );
   }
 
+  Future<void> _checkUserInfo(BuildContext context) async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      final userData = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+
+      try {
+        if (userData.exists) {
+          final data = userData.data()!;
+          if (data.containsKey('firstName') &&
+              data.containsKey('birthday') &&
+              data.containsKey('interests') &&
+              data.containsKey('latitude')) {
+            return;
+          }
+        }
+        // If user data is incomplete
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => PersonalDataPage()),
+        );
+      } catch (e) {
+        print('Error checking user info: $e');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _checkUserInfo(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('EcoMobilize'),
@@ -41,7 +73,7 @@ class MainPage extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
                 onTap: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => FavoritesPage()),
                   );

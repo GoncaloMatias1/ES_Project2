@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'set_location.dart';
 
 class PersonalDataPage extends StatefulWidget {
   @override
@@ -13,6 +14,12 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
   final TextEditingController _lastNameController = TextEditingController();
   DateTime? _selectedDate;
   List<String> _selectedInterests = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDate = null; // Reset the selected date when the widget is initialized
+  }
 
   Future<void> _submitPersonalData(BuildContext context) async {
   try {
@@ -41,7 +48,10 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
         ),
       );
 
-      Navigator.of(context).pop();
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AskDistance()),
+      );
     } else {
       throw Exception('User not found.');
     }
@@ -61,7 +71,7 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
+      firstDate: DateTime(1900,1,1),
       lastDate: DateTime.now(),
     );
     if (picked != null && picked != _selectedDate) {
@@ -100,14 +110,19 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
             ),
             SizedBox(height: 20.0),
             GestureDetector(
-              onTap: () => _selectDate(context),
-              child: AbsorbPointer(
-                child: TextField(
-                  controller: TextEditingController(text: _selectedDate != null ? _selectedDate.toString().substring(0, 10) : ''),
-                  decoration: InputDecoration(labelText: 'Birthday *'),
-                ),
+            onTap: () {
+              Future.microtask(() {
+                _selectDate(context);
+              });
+            },
+            child: AbsorbPointer(
+              child: TextField(
+                controller: TextEditingController(text: _selectedDate != null ? _selectedDate.toString().substring(0, 10) : ''),
+                decoration: InputDecoration(labelText: 'Birthday *'),
               ),
             ),
+          ),
+
             SizedBox(height: 20.0),
             Text(
               'Areas of Interest *',

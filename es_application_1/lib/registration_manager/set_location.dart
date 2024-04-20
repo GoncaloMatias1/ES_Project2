@@ -1,3 +1,4 @@
+import 'package:es_application_1/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -122,7 +123,10 @@ class _AskDistanceState extends State<AskDistance> {
               'longitude': FieldValue.arrayUnion([longitude]),
             });
 
-            Navigator.of(context).pop();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfileScreen()),
+            );
           } catch (e) {
             print('Error storing data: $e');
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
