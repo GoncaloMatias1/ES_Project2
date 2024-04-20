@@ -1,8 +1,8 @@
-import 'package:es_application_1/set_location.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../registration_manager/manager.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -31,7 +31,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     prefs.setString('email', _emailController.text);
     prefs.setString('password', _passwordController.text);
 
-    // Show dialog informing the user to verify their email
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -41,7 +40,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: Text('OK'),
             ),
@@ -59,11 +58,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
     }
 
-    // Navigate to MainPage if email is verified
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => AskDistance()),
-    );
+    RegistrationManager registrationManager = RegistrationManager(context);
+    await registrationManager.startRegistration();
+    
   } catch (e) {
     print('Failed to register user: $e');
 

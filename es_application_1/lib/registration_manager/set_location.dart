@@ -1,7 +1,9 @@
+import 'package:es_application_1/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AskDistance extends StatefulWidget {
   @override
@@ -94,7 +96,7 @@ class _AskDistanceState extends State<AskDistance> {
     });
   }
 
-  void _saveUserData() {
+  void _saveUserData() async {
     if (_selectedLocation != null || _markers.isNotEmpty) {
       LatLng? location;
       if (_selectedLocation != null) {
@@ -107,15 +109,31 @@ class _AskDistanceState extends State<AskDistance> {
         // Retrieve user information
         User? user = FirebaseAuth.instance.currentUser;
         if (user != null) {
-          // Store data in the database
+          // Store data in Firestore
           String userId = user.uid;
           double distance = _sliderValue;
           double latitude = location.latitude;
           double longitude = location.longitude;
-          // Store the data in the database
-          print('User ID: $userId, Distance: $distance km, Latitude: $latitude, Longitude: $longitude');
 
-          // Add your database storage logic here
+          try {
+            DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(userId);
+            userRef.update({
+              'distance': FieldValue.arrayUnion([distance]),
+              'latitude': FieldValue.arrayUnion([latitude]),
+              'longitude': FieldValue.arrayUnion([longitude]),
+            });
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfileScreen()),
+            );
+          } catch (e) {
+            print('Error storing data: $e');
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('Failed to store data. Please try again.'),
+              backgroundColor: Colors.red,
+            ));
+          }
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -172,7 +190,7 @@ class _AskDistanceState extends State<AskDistance> {
               ),
               SizedBox(width: 8),
               Padding(
-                padding: EdgeInsets.only(right: 16.0), // Ajuste o espaçamento à direita conforme necessário
+                padding: EdgeInsets.only(right: 16.0),
                 child: Text(
                   '${_sliderValue.round()} km', style: TextStyle(fontSize: 18),
                 ),
@@ -201,7 +219,7 @@ class _AskDistanceState extends State<AskDistance> {
                   onTap: _onMapTap,
                   markers: _markers,
                   myLocationEnabled: true,
-                  myLocationButtonEnabled: false, // Remove o botão padrão de localização atual
+                  myLocationButtonEnabled: false,
                 ),
                 Positioned(
                   top: 16.0,
@@ -231,10 +249,4 @@ class _AskDistanceState extends State<AskDistance> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: AskDistance(),
-  ));
 }
