@@ -6,9 +6,22 @@ import 'profile_page.dart';
 import 'welcome_screen.dart';
 import 'favorites_page.dart';
 import 'registration_manager/user_info.dart';
+import 'package:intl/intl.dart';
+import 'sustainability_tips.dart';
 
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
+
+  @override
+  _MainPageState createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkUserInfoAndShowTip(context));
+  }
 
   Future<void> _logout(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -20,48 +33,72 @@ class MainPage extends StatelessWidget {
     );
   }
 
-  Future<void> _checkUserInfo(BuildContext context) async {
+  Future<void> _checkUserInfoAndShowTip(BuildContext context) async {
     final user = FirebaseAuth.instance.currentUser;
-
     if (user != null) {
       final userData = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
 
-      try {
-        if (userData.exists) {
-          final data = userData.data()!;
-          if (data.containsKey('firstName') &&
-              data.containsKey('birthday') &&
-              data.containsKey('interests') &&
-              data.containsKey('latitude')) {
-            return;
-          }
-        }
-        // If user data is incomplete
+      if (!userData.exists ||
+          !(userData.data()!.containsKey('firstName') &&
+              userData.data()!.containsKey('birthday') &&
+              userData.data()!.containsKey('interests') &&
+              userData.data()!.containsKey('latitude'))) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => PersonalDataPage()),
         );
-      } catch (e) {
-        print('Error checking user info: $e');
+      } else {
+        _maybeShowSustainabilityTip();
       }
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => WelcomeScreen()),
+      );
+    }
+  }
+
+  void _maybeShowSustainabilityTip() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    bool hasSeenTip = prefs.getBool('hasSeenTip_$today') ?? false;
+
+    if (!hasSeenTip) {
+      String dailyTip = SustainabilityTips.getDailyTip();
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Daily Sustainability Tip'),
+            content: Text(dailyTip),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Got it!'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  prefs.setBool('hasSeenTip_$today', true);
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    _checkUserInfo(context);
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('EcoMobilize'),
+        title: const Text('EcoMobilize'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.logout),
             onPressed: () => _logout(context),
-            icon: Icon(Icons.logout),
           ),
         ],
       ),
-      body: Center(
+      body: const Center(
         child: Text('Main Content Here'),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -84,7 +121,7 @@ class MainPage extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: Colors.white,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.favorite,
                     color: Colors.green,
                     size: 30.0,
@@ -92,7 +129,7 @@ class MainPage extends StatelessWidget {
                 ),
               ),
             ),
-            Container(width: 48.0),
+            const SizedBox(width: 48.0),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
@@ -108,7 +145,7 @@ class MainPage extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: Colors.white,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.person,
                     color: Colors.green,
                     size: 30.0,
