@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../registration_manager/manager.dart';
+import '../registration_manager/user_info.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -58,8 +58,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
     }
 
-    RegistrationManager registrationManager = RegistrationManager(context);
-    await registrationManager.startRegistration();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => PersonalDataPage()),
+    );
     
   } catch (e) {
     print('Failed to register user: $e');

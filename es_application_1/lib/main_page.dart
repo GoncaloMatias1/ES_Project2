@@ -8,6 +8,7 @@ import 'favorites_page.dart';
 import 'registration_manager/user_info.dart';
 import 'package:intl/intl.dart';
 import 'sustainability_tips.dart';
+import 'create_post/create_post.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -147,6 +148,30 @@ class _MainPageState extends State<MainPage> {
                   ),
                   child: const Icon(
                     Icons.person,
+                    color: Colors.green,
+                    size: 30.0,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 48.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CreatePostScreen()),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: const Icon(
+                    Icons.add,
                     color: Colors.green,
                     size: 30.0,
                   ),
