@@ -13,7 +13,7 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   DateTime? _selectedDate;
-  List<String> _selectedInterests = [];
+  final List<String> _selectedInterests = [];
   List<String> _categories = [];
 
   @override
@@ -54,7 +54,7 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Personal data submitted successfully!'),
             backgroundColor: Colors.green,
           ),
@@ -69,7 +69,7 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Failed to submit personal data. Please try again.'),
           backgroundColor: Colors.red,
         ),
@@ -97,29 +97,29 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Enter Personal Data'),
+        title: const Text('Enter Personal Data'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
               controller: _firstNameController,
-              decoration: InputDecoration(labelText: 'First Name *'),
+              decoration: const InputDecoration(labelText: 'First Name *'),
               onChanged: (value) {
                 setState(() {});
               },
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             TextField(
               controller: _lastNameController,
-              decoration: InputDecoration(labelText: 'Last Name *'),
+              decoration: const InputDecoration(labelText: 'Last Name *'),
               onChanged: (value) {
                 setState(() {});
               },
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             GestureDetector(
               onTap: () {
                 Future.microtask(() {
@@ -129,24 +129,24 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
               child: AbsorbPointer(
                 child: TextField(
                   controller: TextEditingController(text: _selectedDate != null ? _selectedDate.toString().substring(0, 10) : ''),
-                  decoration: InputDecoration(labelText: 'Birthday *'),
+                  decoration: const InputDecoration(labelText: 'Birthday *'),
                 ),
               ),
             ),
-            SizedBox(height: 20.0),
-            Text(
+            const SizedBox(height: 20.0),
+            const Text(
               'Areas of Interest *',
               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10.0),
+            const SizedBox(height: 10.0),
             Wrap(
               spacing: 8.0,
               children: _categories.map((category) => _buildInterestChip(category)).toList(),
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () => _submitPersonalData(context),
-              child: Text('Submit'),
+              child: const Text('Submit'),
             ),
           ],
         ),

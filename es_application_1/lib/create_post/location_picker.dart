@@ -15,7 +15,7 @@ class LocationPicker extends StatefulWidget {
 
 class _LocationPickerState extends State<LocationPicker> {
   GoogleMapController? _mapController;
-  Set<Marker> _markers = {};
+  final Set<Marker> _markers = {};
   Position? _currentPosition;
 
   @override
@@ -76,7 +76,7 @@ class _LocationPickerState extends State<LocationPicker> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select Location'),
+        title: const Text('Select Location'),
       ),
       body: Column(
         children: [
@@ -89,7 +89,7 @@ class _LocationPickerState extends State<LocationPicker> {
                           target: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
                           zoom: 14,
                         )
-                      : CameraPosition(
+                      : const CameraPosition(
                           target: LatLng(0, 0),
                           zoom: 14,
                         ),
@@ -109,9 +109,9 @@ class _LocationPickerState extends State<LocationPicker> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green[800],
                       foregroundColor: Colors.white,
-                      shape: CircleBorder(),
+                      shape: const CircleBorder(),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.my_location,
                       color: Colors.blue,
                     ),
@@ -122,7 +122,7 @@ class _LocationPickerState extends State<LocationPicker> {
           ),
           ElevatedButton(
             onPressed: _saveLocation,
-            child: Text('Save Location'),
+            child: const Text('Save Location'),
           ),
         ],
       ),

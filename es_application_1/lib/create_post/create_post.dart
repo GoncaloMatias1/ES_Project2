@@ -16,16 +16,22 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   DateTime? _selectedDate;
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
-  TextEditingController _activityNameController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
-  TextEditingController _locationController = TextEditingController();
-  List<String> _selectedCategories = [];
+  final TextEditingController _activityNameController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+  final List<String> _selectedCategories = [];
   List<String> _categories = [];
 
   @override
   void initState() {
     super.initState();
     _loadCategories();
+  }
+
+  String _formatTimeOfDay(TimeOfDay timeOfDay) {
+    final now = DateTime.now();
+    final dateTime = DateTime(now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
+    return DateFormat.Hm().format(dateTime);
   }
 
   Future<void> _loadCategories() async {
@@ -43,7 +49,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   void _selectDate(BuildContext context) async {
     DateTime currentDate = DateTime.now();
-    DateTime firstSelectableDate = currentDate.add(Duration(days: 3));
+    DateTime firstSelectableDate = currentDate.add(const Duration(days: 3));
 
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -97,8 +103,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     }
   }
 
-
-  void _submitPost() {
+  void _submitPost() async {
     if (_selectedDate != null &&
         _activityNameController.text.isNotEmpty &&
         _descriptionController.text.isNotEmpty &&
@@ -107,14 +112,38 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         _startTime != null &&
         _endTime != null &&
         _endTime!.hour > _startTime!.hour) {
-      // For now, just printing the data
-      print('Activity Name: ${_activityNameController.text}');
-      print('Description: ${_descriptionController.text}');
-      print('Date: $_selectedDate');
-      print('Start Time: $_startTime');
-      print('End Time: $_endTime');
-      print('Location: $_selectedLocation');
-      print('Selected Categories: $_selectedCategories');
+      try {
+
+        Map<String, dynamic> postData = {
+          'activityName': _activityNameController.text,
+          'description': _descriptionController.text,
+          'date': _selectedDate!,
+          'startTime': _formatTimeOfDay(_startTime!), // Convert TimeOfDay to string
+          'endTime': _formatTimeOfDay(_endTime!),
+          'location': GeoPoint(_selectedLocation!.latitude, _selectedLocation!.longitude),
+          'categories': _selectedCategories,
+        };
+
+        await FirebaseFirestore.instance.collection('posts').add(postData);
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Post submitted successfully'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+
+        Navigator.pop(context);
+      } catch (e) {
+        print('Error submitting post: $e');
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error submitting post'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
     } else {
       // Show an error message indicating that all fields are required or the time selection is invalid
       String errorMessage = 'All fields are required.';
@@ -124,11 +153,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(errorMessage),
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         ),
       );
     }
   }
+
+
 
   void _updateLocation(LatLng newLocation) {
     setState(() {
@@ -141,7 +172,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create a Post'),
+        title: const Text('Create a Post'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -151,21 +182,21 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             children: [
               TextFormField(
                 controller: _activityNameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Activity Name *',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _descriptionController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Description *',
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 3,
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 onTap: () {
                   _selectDate(context);
@@ -174,12 +205,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 controller: TextEditingController(
                   text: _selectedDate != null ? DateFormat('yyyy-MM-dd').format(_selectedDate!) : '',
                 ),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'When will it happen *',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               Row(
                 children: [
                   Expanded(
@@ -191,13 +222,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       controller: TextEditingController(
                         text: _startTime != null ? _startTime!.format(context) : '',
                       ),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Start Time *',
                         border: OutlineInputBorder(),
                       ),
                     ),
                   ),
-                  SizedBox(width: 16.0),
+                  const SizedBox(width: 16.0),
                   Expanded(
                     child: TextFormField(
                       onTap: () {
@@ -207,7 +238,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       controller: TextEditingController(
                         text: _endTime != null ? _endTime!.format(context) : '',
                       ),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'End Time *',
                         border: OutlineInputBorder(),
                       ),
@@ -215,16 +246,16 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _locationController,
                 enabled: false,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Location *',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () async {
                   final selectedLocation = await Navigator.push(
@@ -239,22 +270,22 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     _updateLocation(selectedLocation);
                   }
                 },
-                child: Text('Choose Location'),
+                child: const Text('Choose Location'),
               ),
-              SizedBox(height: 16.0),
-              Text(
+              const SizedBox(height: 16.0),
+              const Text(
                 'Categories *',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10.0),
+              const SizedBox(height: 10.0),
               Wrap(
                 spacing: 8.0,
                 children: _categories.map((category) => _buildCategoryChip(category)).toList(),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: _submitPost,
-                child: Text('Submit'),
+                child: const Text('Submit'),
               ),
             ],
           ),
