@@ -4,9 +4,6 @@ import 'favorites_page.dart';
 import 'main_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
-
 class EditProfilePage extends StatefulWidget {
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
@@ -49,9 +46,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     prefs.setBool('profilePhoto', _profilePicture);
     prefs.setBool('favourites', _favourites);
     prefs.setString('username', _usernameController.text);
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -66,13 +61,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                'Edit Profile Information',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 15),
-              CircleAvatar(
-                radius: 60,
+              SizedBox(height: 20),
+              Center(
+                child: CircleAvatar(
+                  radius: 60,
+                ),
               ),
               SizedBox(height: 20),
               TextFormField(
@@ -159,16 +152,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 activeColor: Colors.green,
               ),
               SizedBox(height: 15),
-              ElevatedButton(
-                onPressed: () {
-                  saveSettings();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProfileScreen()),
-                  );
-                },
-                child: Text('Save Changes'),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green[800], foregroundColor: Colors.white),
+              Center( // Centering the button
+                child: ElevatedButton(
+                  onPressed: () {
+                    saveSettings();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ProfileScreen()),
+                    );
+                  },
+                  child: Text('Save Changes'),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.green[800], foregroundColor: Colors.white),
+                ),
               ),
             ],
           ),
