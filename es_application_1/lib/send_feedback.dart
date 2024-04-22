@@ -33,24 +33,24 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
           });
 
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Your feedback has been sent successfully!'),
+            content: const Text('Your feedback has been sent successfully!'),
             backgroundColor: Colors.green[800],
           ));
-          await Future.delayed(Duration(seconds: 2));
+          await Future.delayed(const Duration(seconds: 2));
           Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => ProfileScreen()),
                     );
         }
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Failed to send feedback. Please try again.'),
           backgroundColor: Colors.red,
         ));
         print('Error sending feedback: $e');
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Please enter feedback before sending.'),
         backgroundColor: Colors.red,
       ));
@@ -61,7 +61,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Feedback'),
+        title: const Text('Feedback'),
         backgroundColor: Colors.green[800],
         automaticallyImplyLeading: false,
         centerTitle: false,
@@ -71,11 +71,11 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
         onTap: () => _feedbackController.clear(),
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Text(
+                const Text(
                   'Please write here any bugs or issues that you found.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -84,7 +84,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     letterSpacing: 0,
                   ),
                 ),
-                SizedBox(height: 24.0),
+                const SizedBox(height: 24.0),
                 TextFormField(
                   controller: _feedbackController,
                   autofocus: true,
@@ -96,20 +96,20 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                     ),
-                    prefixIcon: Icon(Icons.feedback, color: Colors.green),
+                    prefixIcon: const Icon(Icons.feedback, color: Colors.green),
                   ),
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                 ),
-                SizedBox(height: 32.0),
+                const SizedBox(height: 32.0),
                 ElevatedButton(
                   onPressed: _sendFeedback,
-                  child: Text('Send Feedback'),
+                  child: const Text('Send Feedback'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green[800],
                     foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 64.0, vertical: 20.0),
-                    textStyle: TextStyle(fontSize: 20.0, fontFamily: 'Readex Pro'),
+                    padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 20.0),
+                    textStyle: const TextStyle(fontSize: 20.0, fontFamily: 'Readex Pro'),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.0),
                     ),
@@ -131,16 +131,16 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => MainPage()),
+                    MaterialPageRoute(builder: (context) => const MainPage()),
                   );
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.home,
                     color: Colors.green,
                     size: 30.0,
@@ -159,11 +159,11 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.favorite,
                     color: Colors.green,
                     size: 30.0,

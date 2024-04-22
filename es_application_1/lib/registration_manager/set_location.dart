@@ -1,9 +1,9 @@
-import 'package:es_application_1/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../main_page.dart';
 
 class AskDistance extends StatefulWidget {
   @override
@@ -74,7 +74,7 @@ class _AskDistanceState extends State<AskDistance> {
     setState(() {
       _selectedLocation = position;
       _markers.clear();
-      _markers.add(Marker(markerId: MarkerId('selectedLocation'), position: position));
+      _markers.add(Marker(markerId: const MarkerId('selectedLocation'), position: position));
     });
   }
 
@@ -88,7 +88,7 @@ class _AskDistanceState extends State<AskDistance> {
         // Set marker at the current location
         if (_currentLocation != null) {
           _markers.add(Marker(
-            markerId: MarkerId('currentLocation'),
+            markerId: const MarkerId('currentLocation'),
             position: LatLng(_currentLocation!.latitude, _currentLocation!.longitude),
           ));
         }
@@ -123,25 +123,25 @@ class _AskDistanceState extends State<AskDistance> {
               'longitude': FieldValue.arrayUnion([longitude]),
             });
 
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => ProfileScreen()),
+              MaterialPageRoute(builder: (context) => const MainPage()),
             );
           } catch (e) {
             print('Error storing data: $e');
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text('Failed to store data. Please try again.'),
               backgroundColor: Colors.red,
             ));
           }
         }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Please select a location on the map.'),
         ));
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Please select a location on the map.'),
       ));
     }
@@ -152,13 +152,13 @@ class _AskDistanceState extends State<AskDistance> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Ask Distance'),
+        title: const Text('Ask Distance'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(height: 16),
-          Text(
+          const SizedBox(height: 16),
+          const Text(
             'Choose the distance',
             style: TextStyle(fontSize: 20, color: Colors.black),
             textAlign: TextAlign.center,
@@ -188,17 +188,17 @@ class _AskDistanceState extends State<AskDistance> {
                   ),
                 ),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Padding(
-                padding: EdgeInsets.only(right: 16.0),
+                padding: const EdgeInsets.only(right: 16.0),
                 child: Text(
-                  '${_sliderValue.round()} km', style: TextStyle(fontSize: 18),
+                  '${_sliderValue.round()} km', style: const TextStyle(fontSize: 18),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 16),
-          Text(
+          const SizedBox(height: 16),
+          const Text(
             'Select the location',
             style: TextStyle(fontSize: 20, color: Colors.black),
             textAlign: TextAlign.center,
@@ -207,7 +207,7 @@ class _AskDistanceState extends State<AskDistance> {
             child: Stack(
               children: [
                 GoogleMap(
-                  initialCameraPosition: CameraPosition(
+                  initialCameraPosition: const CameraPosition(
                     target: LatLng(37.7749, -122.4194),
                     zoom: 12,
                   ),
@@ -230,7 +230,7 @@ class _AskDistanceState extends State<AskDistance> {
                       backgroundColor: Colors.green[800],
                       foregroundColor: Colors.white,
                     ),
-                    child: Text('Use current location'),
+                    child: const Text('Use current location'),
                   ),
                 ),
               ],
@@ -243,7 +243,7 @@ class _AskDistanceState extends State<AskDistance> {
               backgroundColor: Colors.green[800],
               foregroundColor: Colors.white,
             ),
-            child: Text('Save'),
+            child: const Text('Save'),
           ),
         ],
       ),

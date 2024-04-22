@@ -53,18 +53,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Account Successfully Deleted'),
-            content: Text('Your account has been successfully deleted.'),
+            title: const Text('Account Successfully Deleted'),
+            content: const Text('Your account has been successfully deleted.'),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                    MaterialPageRoute(builder: (context) => const WelcomeScreen()),
                         (route) => false,
                   );
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );
@@ -81,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Text('Profile'),
         backgroundColor: Colors.green,
       ),
       body: SingleChildScrollView(
@@ -91,20 +91,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.green, width: 2.0),
                     shape: BoxShape.circle,
                   ),
-                  child: CircleAvatar(
+                  child: const CircleAvatar(
                     radius: 60,
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   _username,
-                  style: TextStyle(fontSize: 18, color: Colors.green),
+                  style: const TextStyle(fontSize: 18, color: Colors.green),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -113,50 +113,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       MaterialPageRoute(builder: (context) => EditProfilePage()),
                     );
                   },
-                  child: Text(
+                  child: const Text(
                     'Edit Profile',
                     style: TextStyle(color: Colors.green),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   'Email Notifications: ${receiveEmailNotifications ? 'On' : 'Off'}',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   'System Notifications : ${systemNotifications ? 'On' : 'Off'}',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   'Only Near Activities : ${onlyNear ? 'On' : 'Off'}',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 Text(
                   'Activity: ${lastTimeOn ? 'On' : 'Off'}',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   'Profile Picture : ${profilePicture ? 'On' : 'Off'}',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   'My favourites : ${favourites ? 'On' : 'Off'}',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => FeedbackScreen()),
+                      MaterialPageRoute(builder: (context) => const FeedbackScreen()),
                     );
                   },
-                  child: Text(
+                  child: const Text(
                     'Send feedback',
                     style: TextStyle(color: Colors.green),
                   ),
@@ -167,27 +167,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text("Delete Account"),
-                          content: Text("Are you sure you want to delete your account?"),
+                          title: const Text("Delete Account"),
+                          content: const Text("Are you sure you want to delete your account?"),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: Text("No"),
+                              child: const Text("No"),
                             ),
                             TextButton(
                               onPressed: () {
                                 deleteAccount();
                               },
-                              child: Text("Yes"),
+                              child: const Text("Yes"),
                             ),
                           ],
                         );
                       },
                     );
                   },
-                  child: Text(
+                  child: const Text(
                     'Delete account',
                     style: TextStyle(color: Colors.red),
                   ),
@@ -208,16 +208,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => MainPage()),
+                    MaterialPageRoute(builder: (context) => const MainPage()),
                   );
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.home,
                     color: Colors.green,
                     size: 30.0,
@@ -236,11 +236,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.favorite,
                     color: Colors.green,
                     size: 30.0,

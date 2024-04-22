@@ -1,5 +1,3 @@
-// In location_picker.dart
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -67,7 +65,7 @@ class _LocationPickerState extends State<LocationPicker> {
   void _saveLocation() {
     if (widget.onLocationSelected != null && _markers.isNotEmpty) {
       widget.onLocationSelected!(_markers.first.position);
-      Navigator.pop(context); // Close the LocationPicker screen
+      Navigator.pop(context);
     }
   }
 

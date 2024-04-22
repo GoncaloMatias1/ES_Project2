@@ -39,14 +39,14 @@ class MyApp extends StatelessWidget {
         ),
         builder: (BuildContext context, AsyncSnapshot<UserCredential> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           } else {
             if (snapshot.hasError) {
               // Stored credentials are invalid
-              return WelcomeScreen();
+              return const WelcomeScreen();
             } else {
               // Stored credentials are valid
-              return MainPage();
+              return const MainPage();
             }
           }
         },
@@ -62,10 +62,10 @@ class MyApp extends StatelessWidget {
             if (snapshot.data == false) {
               return OnboardingScreen();
             } else {
-              return WelcomeScreen();
+              return const WelcomeScreen();
             }
           } else {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
         },
       );

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -39,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
       // If login is successful, navigate to MainPage
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MainPage()),
+        MaterialPageRoute(builder: (context) => const MainPage()),
       );
     } catch (e) {
       print('Failed to login: $e');
@@ -47,14 +49,14 @@ class _LoginScreenState extends State<LoginScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Login Failed'),
-            content: Text('Invalid email or password. Please try again.'),
+            title: const Text('Login Failed'),
+            content: const Text('Invalid email or password. Please try again.'),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );
@@ -73,14 +75,14 @@ class _LoginScreenState extends State<LoginScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Password Reset'),
+            title: const Text('Password Reset'),
             content: Text('A password reset email has been sent to $email.'),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );
@@ -93,14 +95,14 @@ class _LoginScreenState extends State<LoginScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Password Reset Failed'),
-            content: Text('Failed to send password reset email. Please try again.'),
+            title: const Text('Password Reset Failed'),
+            content: const Text('Failed to send password reset email. Please try again.'),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );

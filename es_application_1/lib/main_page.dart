@@ -1,3 +1,4 @@
+import 'package:es_application_1/ranking_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,7 +22,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _checkUserInfoAndShowTip(context));
+    WidgetsBinding.instance!.addPostFrameCallback((_) => _checkUserInfoAndShowTip(context));
   }
 
   Future<void> _logout(BuildContext context) async {
@@ -30,7 +31,7 @@ class _MainPageState extends State<MainPage> {
     await prefs.remove('password');
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => WelcomeScreen()),
+      MaterialPageRoute(builder: (context) => const WelcomeScreen()),
     );
   }
 
@@ -54,7 +55,7 @@ class _MainPageState extends State<MainPage> {
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => WelcomeScreen()),
+        MaterialPageRoute(builder: (context) => const WelcomeScreen()),
       );
     }
   }
@@ -118,7 +119,7 @@ class _MainPageState extends State<MainPage> {
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
                   ),
@@ -130,7 +131,52 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
             ),
-            const SizedBox(width: 48.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => RankingPage()), // Navigate to RankingPage
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: const Icon(
+                    Icons.leaderboard, // Placeholder icon for ranking
+                    color: Colors.green,
+                    size: 30.0,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const CreatePostScreen()),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.green,
+                    size: 30.0,
+                  ),
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
@@ -142,36 +188,12 @@ class _MainPageState extends State<MainPage> {
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
                   ),
                   child: const Icon(
                     Icons.person,
-                    color: Colors.green,
-                    size: 30.0,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 48.0),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CreatePostScreen()),
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                  ),
-                  child: const Icon(
-                    Icons.add,
                     color: Colors.green,
                     size: 30.0,
                   ),

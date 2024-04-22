@@ -35,14 +35,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Registration Successful'),
+          title: const Text('Registration Successful'),
           content: Text('A verification email has been sent to ${_emailController.text}. Please verify your email before logging in.'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -51,7 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     // Check if email is verified before allowing access to the app
     while (!userCredential.user!.emailVerified) {
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
