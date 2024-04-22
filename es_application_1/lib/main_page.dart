@@ -130,31 +130,6 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
             ),
-            const SizedBox(width: 48.0),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProfileScreen()),
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                  ),
-                  child: const Icon(
-                    Icons.person,
-                    color: Colors.green,
-                    size: 30.0,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 48.0),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
@@ -172,6 +147,29 @@ class _MainPageState extends State<MainPage> {
                   ),
                   child: const Icon(
                     Icons.add,
+                    color: Colors.green,
+                    size: 30.0,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfileScreen()),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: const Icon(
+                    Icons.person,
                     color: Colors.green,
                     size: 30.0,
                   ),
