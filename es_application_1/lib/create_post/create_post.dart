@@ -37,7 +37,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   Future<void> _loadCategories() async {
     try {
       DocumentSnapshot categoriesDoc =
-          await FirebaseFirestore.instance.collection('categories').doc('categories').get();
+      await FirebaseFirestore.instance.collection('categories').doc('categories').get();
       List<String> categories = List<String>.from(categoriesDoc.get('name'));
       setState(() {
         _categories = categories;
@@ -125,7 +125,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         };
 
         await FirebaseFirestore.instance.collection('posts').add(postData);
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Post submitted successfully'),
@@ -256,21 +256,23 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () async {
-                  final selectedLocation = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LocationPicker(
-                        onLocationSelected: _updateLocation,
+              Center(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final selectedLocation = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LocationPicker(
+                          onLocationSelected: _updateLocation,
+                        ),
                       ),
-                    ),
-                  );
-                  if (selectedLocation != null && selectedLocation is LatLng) {
-                    _updateLocation(selectedLocation);
-                  }
-                },
-                child: const Text('Choose Location'),
+                    );
+                    if (selectedLocation != null && selectedLocation is LatLng) {
+                      _updateLocation(selectedLocation);
+                    }
+                  },
+                  child: const Text('Choose Location'),
+                ),
               ),
               const SizedBox(height: 16.0),
               const Text(
@@ -283,9 +285,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 children: _categories.map((category) => _buildCategoryChip(category)).toList(),
               ),
               const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: _submitPost,
-                child: const Text('Submit'),
+              Center(
+                child: ElevatedButton(
+                  onPressed: _submitPost,
+                  child: const Text('Submit'),
+                ),
               ),
             ],
           ),
@@ -311,3 +315,4 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     );
   }
 }
+
