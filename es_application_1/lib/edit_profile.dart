@@ -52,36 +52,36 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile'),
+        title: const Text('Edit Profile'),
         backgroundColor: Colors.green,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SizedBox(height: 20),
-              Center(
+              const SizedBox(height: 20),
+              const Center(
                 child: CircleAvatar(
                   radius: 60,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _usernameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Username',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 15),
-              Text(
+              const SizedBox(height: 15),
+              const Text(
                 'Notification Settings',
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               ),
               SwitchListTile(
-                title: Text('Receive Email Notifications'),
+                title: const Text('Receive Email Notifications'),
                 value: _receiveEmailNotifications,
                 onChanged: (value) {
                   setState(() {
@@ -92,7 +92,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 activeColor: Colors.green,
               ),
               SwitchListTile(
-                title: Text('System Notifications'),
+                title: const Text('System Notifications'),
                 value: _systemNotifications,
                 onChanged: (value) {
                   setState(() {
@@ -103,7 +103,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 activeColor: Colors.green,
               ),
               SwitchListTile(
-                title: Text('Only Near Activities'),
+                title: const Text('Only Near Activities'),
                 value: _onlyNear,
                 onChanged: (value) {
                   setState(() {
@@ -114,7 +114,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 activeColor: Colors.green,
               ),
               SwitchListTile(
-                title: Text('Last Time On'),
+                title: const Text('Last Time On'),
                 value: _lastTimeOn,
                 onChanged: (value) {
                   setState(() {
@@ -124,13 +124,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 },
                 activeColor: Colors.green,
               ),
-              SizedBox(height: 15),
-              Text(
+              const SizedBox(height: 15),
+              const Text(
                 'Privacy Settings',
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               ),
               SwitchListTile(
-                title: Text('Profile Picture'),
+                title: const Text('Profile Picture'),
                 value: _profilePicture,
                 onChanged: (value) {
                   setState(() {
@@ -141,7 +141,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 activeColor: Colors.green,
               ),
               SwitchListTile(
-                title: Text('My Favourites'),
+                title: const Text('My Favourites'),
                 value: _favourites,
                 onChanged: (value) {
                   setState(() {
@@ -151,7 +151,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 },
                 activeColor: Colors.green,
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               Center( // Centering the button
                 child: ElevatedButton(
                   onPressed: () {
@@ -161,7 +161,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       MaterialPageRoute(builder: (context) => ProfileScreen()),
                     );
                   },
-                  child: Text('Save Changes'),
+                  child: const Text('Save Changes'),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.green[800], foregroundColor: Colors.white),
                 ),
               ),
@@ -180,16 +180,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => MainPage()),
+                    MaterialPageRoute(builder: (context) => const MainPage()),
                   );
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.home,
                     color: Colors.green,
                     size: 30.0,
@@ -208,11 +208,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.favorite,
                     color: Colors.green,
                     size: 30.0,

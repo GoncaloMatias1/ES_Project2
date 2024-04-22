@@ -60,7 +60,7 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
           ),
         );
 
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => AskDistance()),
         );

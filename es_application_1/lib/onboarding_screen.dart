@@ -21,13 +21,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget _indicator(bool isActive) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 150),
-      margin: EdgeInsets.symmetric(horizontal: 8.0),
+      duration: const Duration(milliseconds: 150),
+      margin: const EdgeInsets.symmetric(horizontal: 8.0),
       height: 8.0,
       width: isActive ? 24.0 : 16.0,
       decoration: BoxDecoration(
         color: isActive ? Colors.green : Colors.grey[300],
-        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderRadius: const BorderRadius.all(Radius.circular(12)),
       ),
     );
   }
@@ -81,11 +81,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ? ElevatedButton(
               onPressed: () {
                 _pageController.nextPage(
-                  duration: Duration(milliseconds: 400),
+                  duration: const Duration(milliseconds: 400),
                   curve: Curves.linear,
                 );
               },
-              child: Text('Next'),
+              child: const Text('Next'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green[800],
                 foregroundColor: Colors.white,
@@ -95,10 +95,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               onPressed: () async {
                 await _setOnboardingComplete();
                 Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => WelcomeScreen()),
+                  MaterialPageRoute(builder: (_) => const WelcomeScreen()),
                 );
               },
-              child: Text('Get Started'),
+              child: const Text('Get Started'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green[800],
                 foregroundColor: Colors.white,
@@ -112,13 +112,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget _createPage({required String title, required String description}) {
     return Container(
-      padding: EdgeInsets.all(24),
+      padding: const EdgeInsets.all(24),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           // Aqui podemos adicionar imagenss
           // Image.asset('assets/earth.png'),
-          SizedBox(height: 100.0),
+          const SizedBox(height: 100.0),
           Text(
             title,
             textAlign: TextAlign.center,
@@ -128,11 +128,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               color: Colors.green[800],
             ),
           ),
-          SizedBox(height: 20.0),
+          const SizedBox(height: 20.0),
           Text(
             description,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18.0),
+            style: const TextStyle(fontSize: 18.0),
           ),
         ],
       ),

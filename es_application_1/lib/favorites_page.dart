@@ -8,10 +8,10 @@ class FavoritesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Favorites'),
+        title: const Text('Favorites'),
         backgroundColor: Colors.green,
       ),
-      body: Center(
+      body: const Center(
         child: Text('Still empty'),
       ),
       bottomNavigationBar: buildBottomNavigationBar(context),
@@ -30,7 +30,7 @@ class FavoritesPage extends StatelessWidget {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => MainPage()),
+                MaterialPageRoute(builder: (context) => const MainPage()),
               );
             },
           ),
@@ -40,7 +40,7 @@ class FavoritesPage extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CreatePostScreen()),
+                MaterialPageRoute(builder: (context) => const CreatePostScreen()),
               );
             },
           ),
@@ -70,7 +70,7 @@ class FavoritesPage extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.all(8.0),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.white,
           ),

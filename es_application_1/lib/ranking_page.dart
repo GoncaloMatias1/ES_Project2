@@ -4,11 +4,13 @@ import 'create_post/create_post.dart';
 import 'main_page.dart';
 
 class RankingPage extends StatelessWidget {
+  const RankingPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Rankings'),
+        title: const Text('Rankings'),
       ),
       body: ListView.builder(
         itemCount: 10,
@@ -22,7 +24,7 @@ class RankingPage extends StatelessWidget {
             ),
             title: Text(ranking),
             subtitle: Text('Score: $score'),
-            trailing: Icon(Icons.arrow_forward),
+            trailing: const Icon(Icons.arrow_forward),
             onTap: () {
             },
           );
@@ -39,16 +41,16 @@ class RankingPage extends StatelessWidget {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => MainPage()),
+                    MaterialPageRoute(builder: (context) => const MainPage()),
                   );
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.home,
                     color: Colors.green,
                     size: 30.0,
@@ -62,16 +64,16 @@ class RankingPage extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CreatePostScreen()),
+                    MaterialPageRoute(builder: (context) => const CreatePostScreen()),
                   );
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.add,
                     color: Colors.green,
                     size: 30.0,
@@ -90,11 +92,11 @@ class RankingPage extends StatelessWidget {
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.person,
                     color: Colors.green,
                     size: 30.0,
@@ -109,16 +111,16 @@ class RankingPage extends StatelessWidget {
                   onTap: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => RankingPage()),
+                      MaterialPageRoute(builder: (context) => const RankingPage()),
                     );
                   },
                   child: Container(
                     padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.leaderboard,
                       color: Colors.green,
                       size: 30.0,
