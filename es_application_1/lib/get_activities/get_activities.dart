@@ -35,6 +35,7 @@ class ActivityManager {
 
       for (DocumentSnapshot postDoc in postSnapshot.docs) {
         List<String> postCategories = List<String>.from(postDoc.get('categories'));
+        String creator = postDoc.get('user');
         if (_categoriesMatchInterests(postCategories, interests)) {
           double activityDistance = _calculateDistance(
             userLocation.latitude,
@@ -43,9 +44,10 @@ class ActivityManager {
             postDoc['location'].longitude,
           );
 
-          // Add to list
-          if (activityDistance <= distance * 1000) {
-            activities.add(postDoc);
+          if (activityDistance <= distance * 1000) { // Check distance
+            if (_currentUser?.uid == creator){
+              activities.add(postDoc);
+            }
           }
         }
       }

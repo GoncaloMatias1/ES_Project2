@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'location_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({Key? key}) : super(key: key);
@@ -20,6 +21,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final List<String> _selectedCategories = [];
+  final user = FirebaseAuth.instance.currentUser;
   List<String> _categories = [];
 
   @override
@@ -122,6 +124,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           'endTime': _formatTimeOfDay(_endTime!),
           'location': GeoPoint(_selectedLocation!.latitude, _selectedLocation!.longitude),
           'categories': _selectedCategories,
+          'user': user?.uid
         };
 
         await FirebaseFirestore.instance.collection('posts').add(postData);
