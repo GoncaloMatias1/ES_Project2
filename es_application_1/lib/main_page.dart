@@ -99,40 +99,72 @@ class _MainPageState extends State<MainPage> {
       return ListView.builder(
         itemCount: activities.length,
         itemBuilder: (context, index) {
-          DocumentSnapshot activity = activities[index];
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      activity['activityName'],
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+          final activity = activities[index];
+          final uid = activity['user'];
+
+          return FutureBuilder<DocumentSnapshot>(
+            future: FirebaseFirestore.instance.collection('users').doc(uid).get(),
+            builder: (context, userSnapshot) {
+              if (userSnapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              final userName = userSnapshot.data?['firstName'] + " " + userSnapshot.data?['lastName'];
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Posted by: $userName',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          activity['activityName'],
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          activity['description'],
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Categories: ${activity['categories'].join(', ')}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      activity['description'],
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           );
         },
       );
     }
   }
+
+
+
 
 
   @override
