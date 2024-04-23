@@ -10,6 +10,7 @@ import 'registration_manager/user_info.dart';
 import 'package:intl/intl.dart';
 import 'sustainability_tips.dart';
 import 'create_post/create_post.dart';
+import 'get_activities/get_activities.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -19,6 +20,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  final ActivityManager _activityManager = ActivityManager();
   @override
   void initState() {
     super.initState();
@@ -44,7 +46,7 @@ class _MainPageState extends State<MainPage> {
           !(userData.data()!.containsKey('firstName') &&
               userData.data()!.containsKey('birthday') &&
               userData.data()!.containsKey('interests') &&
-              userData.data()!.containsKey('latitude'))) {
+              userData.data()!.containsKey('location'))) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => PersonalDataPage()),
@@ -88,6 +90,83 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
+  Widget _buildActivitiesList(List<DocumentSnapshot>? activities) {
+    if (activities == null) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (activities.isEmpty) {
+      return const Center(child: Text('No activities found.'));
+    } else {
+      return ListView.builder(
+        itemCount: activities.length,
+        itemBuilder: (context, index) {
+          final activity = activities[index];
+          final uid = activity['user'];
+
+          return FutureBuilder<DocumentSnapshot>(
+            future: FirebaseFirestore.instance.collection('users').doc(uid).get(),
+            builder: (context, userSnapshot) {
+              if (userSnapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              final userName = userSnapshot.data?['firstName'] + " " + userSnapshot.data?['lastName'];
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Posted by: $userName',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          activity['activityName'],
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          activity['description'],
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Categories: ${activity['categories'].join(', ')}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      );
+    }
+  }
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,8 +179,11 @@ class _MainPageState extends State<MainPage> {
           ),
         ],
       ),
-      body: const Center(
-        child: Text('Main Content Here'),
+      body: FutureBuilder<List<DocumentSnapshot>>(
+        future: _activityManager.getActivities(), // Use ActivityManager to fetch activities
+        builder: (context, snapshot) {
+          return _buildActivitiesList(snapshot.data);
+        },
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.green,

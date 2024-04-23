@@ -112,15 +112,13 @@ class _AskDistanceState extends State<AskDistance> {
           // Store data in Firestore
           String userId = user.uid;
           double distance = _sliderValue;
-          double latitude = location.latitude;
-          double longitude = location.longitude;
+          GeoPoint userLocation = GeoPoint(location.latitude, location.longitude);
 
           try {
             DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(userId);
             userRef.update({
-              'distance': FieldValue.arrayUnion([distance]),
-              'latitude': FieldValue.arrayUnion([latitude]),
-              'longitude': FieldValue.arrayUnion([longitude]),
+              'distance': distance,
+              'location': userLocation,
             });
 
             Navigator.pushReplacement(
@@ -146,6 +144,7 @@ class _AskDistanceState extends State<AskDistance> {
       ));
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
