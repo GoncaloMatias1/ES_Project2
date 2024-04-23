@@ -1,13 +1,24 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:es_application_1/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'favorites_page.dart';
 import 'main_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'dart:io';
 
 class EditProfilePage extends StatefulWidget {
+  final String? initialImageUrl;
+
+  EditProfilePage({Key? key, this.initialImageUrl}) : super(key: key);
+
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
 }
+
+
 
 class _EditProfilePageState extends State<EditProfilePage> {
   TextEditingController _usernameController = TextEditingController();
@@ -17,17 +28,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
   bool _lastTimeOn = true;
   bool _profilePicture = true;
   bool _favourites = true;
+  String? _imageUrl;
 
   @override
   void initState() {
     super.initState();
+    _imageUrl = widget.initialImageUrl;
     loadSettings();
   }
 
   Future<void> loadSettings() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _receiveEmailNotifications = prefs.getBool('receiveEmailNotifications') ?? true;
+      _receiveEmailNotifications =
+          prefs.getBool('receiveEmailNotifications') ?? true;
       _systemNotifications = prefs.getBool('systemNotifications') ?? true;
       _onlyNear = prefs.getBool('onlyNear') ?? true;
       _lastTimeOn = prefs.getBool('lastTimeOn') ?? true;
@@ -48,6 +62,46 @@ class _EditProfilePageState extends State<EditProfilePage> {
     prefs.setString('username', _usernameController.text);
   }
 
+  Future<void> _updateProfilePictureURL(String imageUrl) async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'profilePictureURL': imageUrl,
+      });
+
+      setState(() {
+        _imageUrl = imageUrl;
+      });
+    } catch (e) {
+      print('Error updating profile picture URL: $e');
+    }
+  }
+
+  Future<void> _selectImageURLFromGallery() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      try {
+        // Upload the image to Firebase Storage
+        String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+        String fileName = '$uid.jpg';
+        File imageFile = File(pickedFile.path);
+        firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance.ref().child('profile_pic/$fileName');
+        await ref.putFile(imageFile);
+
+        // Get the download URL of the uploaded image
+        String downloadURL = await ref.getDownloadURL();
+
+        // Update the profile picture URL in Firestore
+        await _updateProfilePictureURL(downloadURL);
+      } catch (e) {
+        print('Error uploading image: $e');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,9 +116,31 @@ class _EditProfilePageState extends State<EditProfilePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const SizedBox(height: 20),
-              const Center(
-                child: CircleAvatar(
-                  radius: 60,
+              GestureDetector(
+                onTap: _selectImageURLFromGallery,
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 60,
+                      backgroundImage: _imageUrl != null
+                          ? NetworkImage(_imageUrl!)
+                          : AssetImage('default.jpg') as ImageProvider<Object>,
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.edit, color: Colors.green),
+                          onPressed: _selectImageURLFromGallery,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 20),
@@ -152,17 +228,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 activeColor: Colors.green,
               ),
               const SizedBox(height: 15),
-              Center( // Centering the button
+              Center(
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     saveSettings();
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => ProfileScreen()),
                     );
                   },
                   child: const Text('Save Changes'),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.green[800], foregroundColor: Colors.white),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green[800],
+                      foregroundColor: Colors.white),
                 ),
               ),
             ],

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'favorites_page.dart';
 import 'main_page.dart';
@@ -21,11 +22,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool profilePicture = true;
   bool favourites = true;
   String _username = "YourUsername";
+  String _profilePictureURL = "";
 
   @override
   void initState() {
     super.initState();
     loadSettings();
+    loadProfilePicture();
   }
 
   Future<void> loadSettings() async {
@@ -41,6 +44,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _usernameController.text = _username;
     });
   }
+
+  Future<void> loadProfilePicture() async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+      DocumentSnapshot<Map<String, dynamic>> userSnapshot = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      String? profilePictureURL = userSnapshot.data()?['profilePictureURL'];
+
+      setState(() {
+        // Check if the user has a profile picture URL, if not, use the default image
+        if (profilePictureURL != null) {
+          _profilePictureURL = profilePictureURL;
+        } else {
+          _profilePictureURL = 'https://firebasestorage.googleapis.com/v0/b/ltw-app-72333.appspot.com/o/default.jpg?alt=media&token=7ba874b3-8ec6-4ddc-b0bf-d38cc36bebed';
+        }
+        print("\n\n\n$_profilePictureURL\n\n\n");
+      });
+    } catch (e) {
+      // If an error occurs, use the default picture
+      setState(() {
+        _profilePictureURL = 'https://firebasestorage.googleapis.com/v0/b/ltw-app-72333.appspot.com/o/default.jpg?alt=media&token=7ba874b3-8ec6-4ddc-b0bf-d38cc36bebed';
+      });
+    }
+  }
+
+
+
 
   Future<void> deleteAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -97,7 +127,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     border: Border.all(color: Colors.green, width: 2.0),
                     shape: BoxShape.circle,
                   ),
-                  child: const CircleAvatar(
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(_profilePictureURL),
                     radius: 60,
                   ),
                 ),
@@ -110,7 +141,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => EditProfilePage()),
+                      MaterialPageRoute(
+                        builder: (context) => EditProfilePage(initialImageUrl: _profilePictureURL.isNotEmpty ? _profilePictureURL : null),
+                      ),
                     );
                   },
                   child: const Text(
