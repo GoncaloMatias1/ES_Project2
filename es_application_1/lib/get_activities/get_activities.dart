@@ -43,7 +43,6 @@ class ActivityManager {
             postDoc['location'].latitude,
             postDoc['location'].longitude,
           );
-          print('Creator of the post is $creator\n');
 
           if (activityDistance <= distance * 1000) { // Check distance
             if (_currentUser?.uid != creator){

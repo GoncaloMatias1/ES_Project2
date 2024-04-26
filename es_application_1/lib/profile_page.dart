@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'favorites_page.dart';
 import 'main_page.dart';
@@ -21,11 +22,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool profilePicture = true;
   bool favourites = true;
   String _username = "YourUsername";
+  String _profilePictureURL = "";
 
   @override
   void initState() {
     super.initState();
     loadSettings();
+    loadProfilePicture();
   }
 
   Future<void> loadSettings() async {
@@ -41,6 +44,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _usernameController.text = _username;
     });
   }
+
+  Future<void> loadProfilePicture() async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+      DocumentSnapshot<Map<String, dynamic>> userSnapshot = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      String? profilePictureURL = userSnapshot.data()?['profilePictureURL'];
+
+      setState(() {
+        // Check if the user has a profile picture URL, if not, use the default image
+        if (profilePictureURL != null) {
+          _profilePictureURL = profilePictureURL;
+        }
+      });
+    } catch (e) {
+      // If an error occurs
+    }
+  }
+
+
+
 
   Future<void> deleteAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -97,7 +121,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     border: Border.all(color: Colors.green, width: 2.0),
                     shape: BoxShape.circle,
                   ),
-                  child: const CircleAvatar(
+                  child: CircleAvatar(
+                    backgroundColor: _profilePictureURL.isNotEmpty ? null : Colors.green[200],
+                    backgroundImage: _profilePictureURL.isNotEmpty ? NetworkImage(_profilePictureURL) : null,
                     radius: 60,
                   ),
                 ),
@@ -110,7 +136,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => EditProfilePage()),
+                      MaterialPageRoute(
+                        builder: (context) => EditProfilePage(initialImageUrl: _profilePictureURL.isNotEmpty ? _profilePictureURL : null),
+                      ),
                     );
                   },
                   child: const Text(

@@ -12,6 +12,8 @@ dependencies:
   firebase_core: ^2.29.0
   cloud_firestore: ^4.16.1
   firebase_auth: ^4.19.1
+  firebase_storage: ^11.7.1
+  image_picker: ^0.8.1
   flutter:
     sdk: flutter
   flutter_google_places: 0.3.0
