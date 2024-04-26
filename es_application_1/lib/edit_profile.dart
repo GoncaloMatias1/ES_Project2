@@ -122,9 +122,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   children: [
                     CircleAvatar(
                       radius: 60,
-                      backgroundImage: _imageUrl != null
-                          ? NetworkImage(_imageUrl!)
-                          : AssetImage('default.jpg') as ImageProvider<Object>,
+                      backgroundColor: _imageUrl != null ? null : Colors.green[200],
+                      backgroundImage: _imageUrl != null ? NetworkImage(_imageUrl!) : null,
                     ),
                     Positioned(
                       bottom: 0,

@@ -56,16 +56,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         // Check if the user has a profile picture URL, if not, use the default image
         if (profilePictureURL != null) {
           _profilePictureURL = profilePictureURL;
-        } else {
-          _profilePictureURL = 'https://firebasestorage.googleapis.com/v0/b/ltw-app-72333.appspot.com/o/default.jpg?alt=media&token=7ba874b3-8ec6-4ddc-b0bf-d38cc36bebed';
         }
-        print("\n\n\n$_profilePictureURL\n\n\n");
       });
     } catch (e) {
-      // If an error occurs, use the default picture
-      setState(() {
-        _profilePictureURL = 'https://firebasestorage.googleapis.com/v0/b/ltw-app-72333.appspot.com/o/default.jpg?alt=media&token=7ba874b3-8ec6-4ddc-b0bf-d38cc36bebed';
-      });
+      // If an error occurs
     }
   }
 
@@ -128,7 +122,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     shape: BoxShape.circle,
                   ),
                   child: CircleAvatar(
-                    backgroundImage: NetworkImage(_profilePictureURL),
+                    backgroundColor: _profilePictureURL.isNotEmpty ? null : Colors.green[200],
+                    backgroundImage: _profilePictureURL.isNotEmpty ? NetworkImage(_profilePictureURL) : null,
                     radius: 60,
                   ),
                 ),
