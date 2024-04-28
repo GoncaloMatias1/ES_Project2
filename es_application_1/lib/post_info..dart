@@ -53,6 +53,21 @@ class ActivityDetailPage extends StatelessWidget {
     return formattedCoordinate;
   }
 
+  Future<void> _handleLikeButtonPress(String postId) async {
+    // Implement your logic here to handle the like button press
+    print('Like button pressed for post: $postId');
+  }
+
+  Future<void> _handleFavoriteButtonPress(String postId) async {
+    // Implement your logic here to handle the favorite button press
+    print('Favorite button pressed');
+  }
+
+  Future<void> _handleSubscribeButtonPress(String postId) async {
+    // Implement your logic here to handle the subscribe button press
+    print('Subscribe button pressed');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,18 +202,18 @@ class ActivityDetailPage extends StatelessWidget {
                         IconButton(
                           icon: Icon(Icons.thumb_up),
                           onPressed: () {
-                            // Handle like button press
+                            _handleLikeButtonPress(activityId);
                           },
                         ),
                         IconButton(
                           icon: Icon(Icons.favorite_border),
                           onPressed: () {
-                            // Handle add to favorites button press
+                            _handleFavoriteButtonPress(activityId);
                           },
                         ),
                         GestureDetector(
                           onTap: () {
-                            // Handle subscribe button press
+                            _handleSubscribeButtonPress(activityId);
                           },
                           child: Container(
                             padding: EdgeInsets.all(8),
