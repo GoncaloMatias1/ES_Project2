@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'sustainability_tips.dart';
 import 'create_post/create_post.dart';
 import 'get_activities/get_activities.dart';
+import 'post_info..dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -24,7 +25,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) => _checkUserInfoAndShowTip(context));
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkUserInfoAndShowTip(context));
   }
 
   Future<void> _logout(BuildContext context) async {
@@ -102,56 +103,97 @@ class _MainPageState extends State<MainPage> {
           final activity = activities[index];
           final uid = activity['user'];
 
-          return FutureBuilder<DocumentSnapshot>(
+          return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
             future: FirebaseFirestore.instance.collection('users').doc(uid).get(),
             builder: (context, userSnapshot) {
               if (userSnapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              final userName = userSnapshot.data?['firstName'] + " " + userSnapshot.data?['lastName'];
+              final userName = userSnapshot.data!['firstName'] + " " + userSnapshot.data!['lastName'];
+              String? userProfilePhoto;
+              /// Phot URL might not exist
+              try {
+                userProfilePhoto = userSnapshot.data!["profilePictureURL"] as String?;
+              } catch (e) {
+                userProfilePhoto = null;
+              }
 
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Card(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Posted by: $userName',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ActivityDetailPage(activityId: activity.id),
+                      ),
+                    );
+                  },
+                  child: Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: userProfilePhoto != null ? Colors.transparent : Colors.green,
+                                  image: userProfilePhoto != null
+                                      ? DecorationImage(
+                                          image: NetworkImage(userProfilePhoto),
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null,
+                                ),
+                                child: userProfilePhoto == null
+                                    ? const Icon(Icons.person, color: Colors.white)
+                                    : null,
+                              ),
+                              const SizedBox(width: 12),
+                              Text(
+                                userName,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          activity['activityName'],
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                          const SizedBox(height: 8),
+                          Center(
+                            child: Text(
+                              activity['activityName'],
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          activity['description'],
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Categories: ${activity['categories'].join(', ')}',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontStyle: FontStyle.italic,
+                          const SizedBox(height: 8),
+                          Text(
+                            activity['description'],
+                            style: const TextStyle(fontSize: 16),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 8),
+                          Text(
+                            'Categories: ${activity['categories'].join(', ')}',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -162,9 +204,6 @@ class _MainPageState extends State<MainPage> {
       );
     }
   }
-
-
-
 
 
   @override
@@ -180,7 +219,7 @@ class _MainPageState extends State<MainPage> {
         ],
       ),
       body: FutureBuilder<List<DocumentSnapshot>>(
-        future: _activityManager.getActivities(), // Use ActivityManager to fetch activities
+        future: _activityManager.getActivities(),
         builder: (context, snapshot) {
           return _buildActivitiesList(snapshot.data);
         },
@@ -219,7 +258,7 @@ class _MainPageState extends State<MainPage> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => RankingPage()), // Navigate to RankingPage
+                    MaterialPageRoute(builder: (context) => const RankingPage()),
                   );
                 },
                 child: Container(
@@ -229,7 +268,7 @@ class _MainPageState extends State<MainPage> {
                     color: Colors.white,
                   ),
                   child: const Icon(
-                    Icons.leaderboard, // Placeholder icon for ranking
+                    Icons.leaderboard,
                     color: Colors.green,
                     size: 30.0,
                   ),
