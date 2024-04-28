@@ -123,7 +123,6 @@ class _MainPageState extends State<MainPage> {
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: InkWell(
                   onTap: () {
-                    // Navigate to ActivityDetailPage passing activity id
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -148,7 +147,7 @@ class _MainPageState extends State<MainPage> {
                                 height: 50,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: userProfilePhoto != null ? Colors.transparent : Colors.green, // If photoURL is null, use green background
+                                  color: userProfilePhoto != null ? Colors.transparent : Colors.green,
                                   image: userProfilePhoto != null
                                       ? DecorationImage(
                                           image: NetworkImage(userProfilePhoto),
@@ -157,7 +156,7 @@ class _MainPageState extends State<MainPage> {
                                       : null,
                                 ),
                                 child: userProfilePhoto == null
-                                    ? const Icon(Icons.person, color: Colors.white) // Placeholder icon if photoURL is null
+                                    ? const Icon(Icons.person, color: Colors.white)
                                     : null,
                               ),
                               const SizedBox(width: 12),
@@ -220,7 +219,7 @@ class _MainPageState extends State<MainPage> {
         ],
       ),
       body: FutureBuilder<List<DocumentSnapshot>>(
-        future: _activityManager.getActivities(), // Use ActivityManager to fetch activities
+        future: _activityManager.getActivities(),
         builder: (context, snapshot) {
           return _buildActivitiesList(snapshot.data);
         },
@@ -259,7 +258,7 @@ class _MainPageState extends State<MainPage> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => RankingPage()), // Navigate to RankingPage
+                    MaterialPageRoute(builder: (context) => const RankingPage()),
                   );
                 },
                 child: Container(
@@ -269,7 +268,7 @@ class _MainPageState extends State<MainPage> {
                     color: Colors.white,
                   ),
                   child: const Icon(
-                    Icons.leaderboard, // Placeholder icon for ranking
+                    Icons.leaderboard,
                     color: Colors.green,
                     size: 30.0,
                   ),

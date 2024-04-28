@@ -6,7 +6,6 @@ class ActivityManager {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final User? _currentUser = FirebaseAuth.instance.currentUser;
   
-  // Initialize variables with default values
   List<String> interests = [];
   double distance = 0;
   GeoPoint userLocation = const GeoPoint(0, 0);
@@ -45,7 +44,7 @@ class ActivityManager {
               postDoc['location'].longitude,
             );
 
-            if (activityDistance <= distance * 1000) { // Check distance
+            if (activityDistance <= distance * 1000) { /// Check distance
                 activities.add(postDoc);
             }
           }

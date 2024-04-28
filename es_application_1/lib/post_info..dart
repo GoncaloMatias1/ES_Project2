@@ -34,7 +34,6 @@ class _ActivityDetailPageState extends State<ActivityDetailPage>{
     final String endTime = activityData['endTime'] as String;
     final Timestamp timestamp = activityData['date'] as Timestamp;
 
-    // Parse date string to DateTime
     final DateTime date = timestamp.toDate();
     final DateFormat formatter = DateFormat('dd/MM/yyyy');
     final String formattedDate = formatter.format(date);
@@ -61,14 +60,14 @@ class _ActivityDetailPageState extends State<ActivityDetailPage>{
       }
     }
 
-    bool isSubscribed = false; // Initialize isSubscribed
+    bool isSubscribed = false;
     if (user != null) {
       final userData = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
       if (userData.exists) {
         final likedActivities = userData.data()?['liked'] as List<dynamic>? ?? [];
         isLiked = likedActivities.contains(activityId);
         final subscribedActivities = userData.data()?['subscribed'] as List<dynamic>? ?? [];
-        isSubscribed = subscribedActivities.contains(activityId); // Check if the user is subscribed
+        isSubscribed = subscribedActivities.contains(activityId);
       }
     }
 
@@ -212,21 +211,20 @@ class _ActivityDetailPageState extends State<ActivityDetailPage>{
               padding: const EdgeInsets.all(16.0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.lightGreen[100], // Light green background color
+                  color: Colors.lightGreen[100],
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2), // Shadow color
+                      color: Colors.black.withOpacity(0.2),
                       spreadRadius: 2,
                       blurRadius: 4,
-                      offset: const Offset(0, 2), // Shadow position
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // User photo and name
                     CircleAvatar(
                       radius: 30,
                       backgroundColor: data['userProfilePhoto'] == '' ? Colors.green[700] : null,
@@ -234,7 +232,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage>{
                           ? NetworkImage(data['userProfilePhoto'])
                           : null,
                       child: data['userProfilePhoto'] == ''
-                          ? const Icon(Icons.person, color: Colors.white) // Placeholder icon if photoURL is null
+                          ? const Icon(Icons.person, color: Colors.white)
                           : null,
                     ),
                     const SizedBox(height: 12),
@@ -243,14 +241,12 @@ class _ActivityDetailPageState extends State<ActivityDetailPage>{
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),
                     ),
                     const SizedBox(height: 16),
-                    // Activity name
                     Text(
                       data['activityName'],
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.green[900]),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
-                    // Other activity details
                     Text(
                       'Description: ${data['description']}',
                       style: const TextStyle(color: Colors.black),
@@ -259,7 +255,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage>{
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.green[200], // Lighter green background color
+                        color: Colors.green[200],
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
