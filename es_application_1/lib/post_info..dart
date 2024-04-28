@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class ActivityDetailPage extends StatelessWidget {
+class ActivityDetailPage extends StatefulWidget {
   final String activityId;
 
   const ActivityDetailPage({Key? key, required this.activityId}) : super(key: key);
 
+  @override
+  _ActivityDetailPageState createState() => _ActivityDetailPageState();
+}
+
+class _ActivityDetailPageState extends State<ActivityDetailPage>{
   Future<Map<String, dynamic>> _loadData(String activityId) async {
+    final user = FirebaseAuth.instance.currentUser;
     final activitySnapshot = await FirebaseFirestore.instance.collection('posts').doc(activityId).get();
     final userDataSnapshot = await FirebaseFirestore.instance.collection('users').doc(activitySnapshot['user']).get();
 
@@ -35,6 +42,36 @@ class ActivityDetailPage extends StatelessWidget {
     final String userName = '${userData['firstName']} ${userData['lastName']}';
     final String userProfilePhoto = userData['profilePictureURL'] ?? '';
 
+    // Check if the user has already liked the post
+    bool isLiked = false;
+    if (user != null) {
+      final userData = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      if (userData.exists) {
+        final likedActivities = userData.data()?['liked'] as List<dynamic>? ?? [];
+        isLiked = likedActivities.contains(activityId);
+      }
+    }
+
+    bool isFavorite = false;
+    if (user != null) {
+      final userData = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      if (userData.exists) {
+        final favoriteActivities = userData.data()?['favorites'] as List<dynamic>? ?? [];
+        isFavorite = favoriteActivities.contains(activityId);
+      }
+    }
+
+    bool isSubscribed = false; // Initialize isSubscribed
+    if (user != null) {
+      final userData = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      if (userData.exists) {
+        final likedActivities = userData.data()?['liked'] as List<dynamic>? ?? [];
+        isLiked = likedActivities.contains(activityId);
+        final subscribedActivities = userData.data()?['subscribed'] as List<dynamic>? ?? [];
+        isSubscribed = subscribedActivities.contains(activityId); // Check if the user is subscribed
+      }
+    }
+
     return {
       'activityName': activityName,
       'description': description,
@@ -45,45 +82,127 @@ class ActivityDetailPage extends StatelessWidget {
       'date': formattedDate,
       'userName': userName,
       'userProfilePhoto': userProfilePhoto,
+      'isLiked': isLiked,
+      'isFavorite': isFavorite,
+      'isSubscribed': isSubscribed,
     };
   }
+
+  Future<void> _handleLikeButtonPress(String postId, bool isLiked) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+      final userData = await userRef.get();
+      if (userData.exists) {
+        List<dynamic> likedActivities = userData.data()?['liked'] as List<dynamic>? ?? [];
+
+        if (isLiked) {
+          likedActivities.remove(postId);
+        } else {
+          likedActivities.add(postId);
+        }
+        await userRef.update({'liked': likedActivities});
+
+        // Update liked field in 'posts' collection
+        final postRef = FirebaseFirestore.instance.collection('posts').doc(postId);
+        final postData = await postRef.get();
+        if (postData.exists) {
+          List<dynamic> postLikedBy = postData.data()?['liked'] as List<dynamic>? ?? [];
+          
+          if (isLiked) {
+            postLikedBy.remove(user.uid);
+          } else {
+            postLikedBy.add(user.uid);
+          }
+
+          await postRef.update({'liked': postLikedBy});
+        }
+      }
+    }
+    setState(() {
+      isLiked = !isLiked;
+    });
+  }
+
+  Future<void> _handleFavoriteButtonPress(String postId, bool isFavorite) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+      final userData = await userRef.get();
+      if (userData.exists) {
+        List<dynamic> favoriteActivities = userData.data()?['favorites'] as List<dynamic>? ?? [];
+
+        if (isFavorite) {
+          favoriteActivities.remove(postId);
+        } else {
+          favoriteActivities.add(postId);
+        }
+        await userRef.update({'favorites': favoriteActivities});
+      }
+    }
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+  }
+
+  Future<void> _handleSubscribeButtonPress(String postId, bool isSubscribed) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+      final userData = await userRef.get();
+      if (userData.exists) {
+        List<dynamic> subscribedActivities = userData.data()?['subscribed'] as List<dynamic>? ?? [];
+
+        if (isSubscribed) {
+          subscribedActivities.remove(postId);
+        } else {
+          subscribedActivities.add(postId);
+        }
+        await userRef.update({'subscribed': subscribedActivities});
+
+        // Update the 'posts' collection
+        final postRef = FirebaseFirestore.instance.collection('posts').doc(postId);
+        final postData = await postRef.get();
+        if (postData.exists) {
+          List<dynamic> postSubscribedBy = postData.data()?['subscribed'] as List<dynamic>? ?? [];
+          
+          if (isSubscribed) {
+            postSubscribedBy.remove(user.uid);
+          } else {
+            postSubscribedBy.add(user.uid);
+          }
+          await postRef.update({'subscribed': postSubscribedBy});
+        }
+      }
+    }
+    setState(() {
+      isSubscribed = !isSubscribed;
+    });
+  }
+
+
 
   String _formatCoordinate(double coordinate) {
     final formattedCoordinate = coordinate.abs().toStringAsFixed(7);
     return formattedCoordinate;
   }
 
-  Future<void> _handleLikeButtonPress(String postId) async {
-    // Implement your logic here to handle the like button press
-    print('Like button pressed for post: $postId');
-  }
-
-  Future<void> _handleFavoriteButtonPress(String postId) async {
-    // Implement your logic here to handle the favorite button press
-    print('Favorite button pressed');
-  }
-
-  Future<void> _handleSubscribeButtonPress(String postId) async {
-    // Implement your logic here to handle the subscribe button press
-    print('Subscribe button pressed');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Activity Details'),
+        title: const Text('Activity Details'),
       ),
       body: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(),
         child: FutureBuilder<Map<String, dynamic>>(
-          future: _loadData(activityId),
+          future: _loadData(widget.activityId),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
             if (!snapshot.hasData || snapshot.data == null) {
-              return Center(child: Text('Error: Activity not found'));
+              return const Center(child: Text('Error: Activity not found'));
             }
 
             final data = snapshot.data!;
@@ -100,7 +219,7 @@ class ActivityDetailPage extends StatelessWidget {
                       color: Colors.black.withOpacity(0.2), // Shadow color
                       spreadRadius: 2,
                       blurRadius: 4,
-                      offset: Offset(0, 2), // Shadow position
+                      offset: const Offset(0, 2), // Shadow position
                     ),
                   ],
                 ),
@@ -115,30 +234,30 @@ class ActivityDetailPage extends StatelessWidget {
                           ? NetworkImage(data['userProfilePhoto'])
                           : null,
                       child: data['userProfilePhoto'] == ''
-                          ? Icon(Icons.person, color: Colors.white) // Placeholder icon if photoURL is null
+                          ? const Icon(Icons.person, color: Colors.white) // Placeholder icon if photoURL is null
                           : null,
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     Text(
                       data['userName'],
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     // Activity name
                     Text(
                       data['activityName'],
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.green[900]),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     // Other activity details
                     Text(
                       'Description: ${data['description']}',
-                      style: TextStyle(color: Colors.black),
+                      style: const TextStyle(color: Colors.black),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Container(
-                      padding: EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         color: Colors.green[200], // Lighter green background color
                         borderRadius: BorderRadius.circular(12),
@@ -150,7 +269,7 @@ class ActivityDetailPage extends StatelessWidget {
                             'Location:',
                             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green[900]),
                           ),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Container(
                             height: 150,
                             child: GoogleMap(
@@ -160,76 +279,76 @@ class ActivityDetailPage extends StatelessWidget {
                               ),
                               markers: {
                                 Marker(
-                                  markerId: MarkerId('activity_location'),
+                                  markerId: const MarkerId('activity_location'),
                                   position: activityLocation,
                                 ),
                               },
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             'Coordinates: [${_formatCoordinate(data['location'].latitude)}° ${data['location'].latitude >= 0 ? 'N' : 'S'}, ${_formatCoordinate(data['location'].longitude)}° ${data['location'].longitude >= 0 ? 'E' : 'W'}]',
-                            style: TextStyle(color: Colors.black),
+                            style: const TextStyle(color: Colors.black),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             'Start Time: ${data['startTime']}',
-                            style: TextStyle(color: Colors.black),
+                            style: const TextStyle(color: Colors.black),
                           ),
                           Text(
                             'End Time: ${data['endTime']}',
-                            style: TextStyle(color: Colors.black),
+                            style: const TextStyle(color: Colors.black),
                           ),
                           Text(
                             'Date: ${data['date']}',
-                            style: TextStyle(color: Colors.black),
+                            style: const TextStyle(color: Colors.black),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
                         'Categories: ${data['categories'].join(', ')}',
-                        style: TextStyle(fontStyle: FontStyle.italic, color: Colors.black),
+                        style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.black),
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         IconButton(
-                          icon: Icon(Icons.thumb_up),
+                          icon: Icon(Icons.thumb_up, color: data['isLiked'] ? Colors.blue : null),
                           onPressed: () {
-                            _handleLikeButtonPress(activityId);
+                            _handleLikeButtonPress(widget.activityId, data['isLiked']);
                           },
                         ),
                         IconButton(
-                          icon: Icon(Icons.favorite_border),
+                          icon: Icon(data['isFavorite'] ? Icons.favorite : Icons.favorite_border, color: data['isFavorite'] ? Colors.red : null),
                           onPressed: () {
-                            _handleFavoriteButtonPress(activityId);
+                            _handleFavoriteButtonPress(widget.activityId, data['isFavorite']);
                           },
                         ),
                         GestureDetector(
                           onTap: () {
-                            _handleSubscribeButtonPress(activityId);
+                            _handleSubscribeButtonPress(widget.activityId, data['isSubscribed']);
                           },
                           child: Container(
-                            padding: EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
                               color: Colors.green[200],
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
-                              'Subscribe',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              data['isSubscribed'] ? 'Unsubscribe' : 'Subscribe',
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                   ],
                 ),
               ),

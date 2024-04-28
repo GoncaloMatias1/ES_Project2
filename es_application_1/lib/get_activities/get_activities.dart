@@ -9,7 +9,7 @@ class ActivityManager {
   // Initialize variables with default values
   List<String> interests = [];
   double distance = 0;
-  GeoPoint userLocation = GeoPoint(0, 0);
+  GeoPoint userLocation = const GeoPoint(0, 0);
 
   ActivityManager() {
     _fetchUserData();
@@ -21,7 +21,7 @@ class ActivityManager {
         DocumentSnapshot userDoc = await _firestore.collection('users').doc(_currentUser.uid).get();
         interests = List<String>.from(userDoc.get('interests'));
         distance = userDoc.get('distance') * 1000 ?? 0;
-        userLocation = userDoc.get('location') ?? GeoPoint(0, 0);
+        userLocation = userDoc.get('location') ?? const GeoPoint(0, 0);
       } catch (e) {
         print('Error fetching user data: $e');
       }
@@ -36,17 +36,17 @@ class ActivityManager {
       for (DocumentSnapshot postDoc in postSnapshot.docs) {
         List<String> postCategories = List<String>.from(postDoc.get('categories'));
         String creator = postDoc.get('user');
-        if (_categoriesMatchInterests(postCategories, interests)) {
-          double activityDistance = _calculateDistance(
-            userLocation.latitude,
-            userLocation.longitude,
-            postDoc['location'].latitude,
-            postDoc['location'].longitude,
-          );
+        if (_currentUser?.uid != creator){ /// Does not show post from the user logged in
+          if (_categoriesMatchInterests(postCategories, interests)) {
+            double activityDistance = _calculateDistance(
+              userLocation.latitude,
+              userLocation.longitude,
+              postDoc['location'].latitude,
+              postDoc['location'].longitude,
+            );
 
-          if (activityDistance <= distance * 1000) { // Check distance
-            if (_currentUser?.uid != creator){
-              activities.add(postDoc);
+            if (activityDistance <= distance * 1000) { // Check distance
+                activities.add(postDoc);
             }
           }
         }

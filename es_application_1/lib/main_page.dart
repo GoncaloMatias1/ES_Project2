@@ -25,7 +25,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) => _checkUserInfoAndShowTip(context));
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkUserInfoAndShowTip(context));
   }
 
   Future<void> _logout(BuildContext context) async {
@@ -151,7 +151,7 @@ class _MainPageState extends State<MainPage> {
                                   color: userProfilePhoto != null ? Colors.transparent : Colors.green, // If photoURL is null, use green background
                                   image: userProfilePhoto != null
                                       ? DecorationImage(
-                                          image: NetworkImage(userProfilePhoto!),
+                                          image: NetworkImage(userProfilePhoto),
                                           fit: BoxFit.cover,
                                         )
                                       : null,
