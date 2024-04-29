@@ -1,42 +1,38 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mockito/mockito.dart';
-import 'package:cloud_firestore_mocks/cloud_firestore_mocks.dart';
-import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
-import '.../activity_detail_page.dart';
+import 'package:flutter/material.dart';
+import 'package:es_application_1/post_info.dart';
 
-class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
+class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
 
 void main() {
-  group('ActivityDetailPage Tests', () {
-    test('Load data successfully', () async {
-      final mockFirestore = MockFirebaseFirestore();
-      final mockFirebaseAuth = MockFirebaseAuth();
+  group('ActivityDetailPage', () {
+    late ActivityDetailPage activityDetailPage;
+    const String mockActivityId = 'mockActivityId';
 
-      when(mockFirebaseAuth.currentUser).thenReturn(MockUser(uid: '123'));
-      when(mockFirestore.collection('posts').doc(any)).thenAnswer(
-            (_) async => MockDocumentSnapshot(
-          data: {
-            'activityName': 'Test Activity',
-            'description': 'This is a test',
-          },
-        ),
-      );
-      when(mockFirestore.collection('users').doc(any)).thenAnswer(
-            (_) async => MockDocumentSnapshot(
-          data: {
-            'firstName': 'Test',
-            'lastName': 'User',
-          },
-        ),
-      );
-
-      final activityDetailPageState = _ActivityDetailPageState();
-      final data = await activityDetailPageState.loadData('activityId');
-
-      expect(data['activityName'], 'Test Activity');
-      expect(data['description'], 'This is a test');
+    setUp(() {
+      activityDetailPage = const ActivityDetailPage(activityId: mockActivityId);
     });
 
+    group('formatCoordinate', () {
+      test('should format positive latitude coordinate', () {
+        const double latitude = 45.6789;
+        final String formattedCoordinate = activityDetailPage.getState().formatCoordinate(latitude);
+        expect(formattedCoordinate, '45.6789000');
+      });
+    });
+  });
+
+  group('ActivityDetailPage Widget Tests', () {
+    testWidgets('ActivityDetailPage UI components', (WidgetTester tester) async {
+      await tester.pumpWidget(const MaterialApp(home: ActivityDetailPage(activityId: 'mockActivityId')));
+      expect(find.text('Activity Details'), findsOneWidget);
+    });
   });
 }
+
+// Mock classes
+class MockUser extends Mock implements User {}

@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-/// Being Done
+/// Tests Done
 
 class ActivityDetailPage extends StatefulWidget {
   final String activityId;
@@ -12,11 +12,15 @@ class ActivityDetailPage extends StatefulWidget {
   const ActivityDetailPage({Key? key, required this.activityId}) : super(key: key);
 
   @override
-  _ActivityDetailPageState createState() => _ActivityDetailPageState();
+  ActivityDetailPageState createState() => ActivityDetailPageState();
+
+  ActivityDetailPageState getState() {
+    return ActivityDetailPageState();
+  }
 }
 
-class _ActivityDetailPageState extends State<ActivityDetailPage>{
-  Future<Map<String, dynamic>> _loadData(String activityId) async {
+class ActivityDetailPageState extends State<ActivityDetailPage>{
+  Future<Map<String, dynamic>> loadData(String activityId) async {
     final user = FirebaseAuth.instance.currentUser;
     final activitySnapshot = await FirebaseFirestore.instance.collection('posts').doc(activityId).get();
     final userDataSnapshot = await FirebaseFirestore.instance.collection('users').doc(activitySnapshot['user']).get();
@@ -89,7 +93,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage>{
     };
   }
 
-  Future<void> _handleLikeButtonPress(String postId, bool isLiked) async {
+  Future<void> handleLikeButtonPress(String postId, bool isLiked) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
@@ -125,7 +129,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage>{
     });
   }
 
-  Future<void> _handleFavoriteButtonPress(String postId, bool isFavorite) async {
+  Future<void> handleFavoriteButtonPress(String postId, bool isFavorite) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
@@ -146,7 +150,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage>{
     });
   }
 
-  Future<void> _handleSubscribeButtonPress(String postId, bool isSubscribed) async {
+  Future<void> handleSubscribeButtonPress(String postId, bool isSubscribed) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
@@ -183,7 +187,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage>{
 
 
 
-  String _formatCoordinate(double coordinate) {
+  String formatCoordinate(double coordinate) {
     final formattedCoordinate = coordinate.abs().toStringAsFixed(7);
     return formattedCoordinate;
   }
@@ -197,7 +201,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage>{
       body: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         child: FutureBuilder<Map<String, dynamic>>(
-          future: _loadData(widget.activityId),
+          future: loadData(widget.activityId),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
@@ -285,7 +289,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage>{
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Coordinates: [${_formatCoordinate(data['location'].latitude)}° ${data['location'].latitude >= 0 ? 'N' : 'S'}, ${_formatCoordinate(data['location'].longitude)}° ${data['location'].longitude >= 0 ? 'E' : 'W'}]',
+                            'Coordinates: [${formatCoordinate(data['location'].latitude)}° ${data['location'].latitude >= 0 ? 'N' : 'S'}, ${formatCoordinate(data['location'].longitude)}° ${data['location'].longitude >= 0 ? 'E' : 'W'}]',
                             style: const TextStyle(color: Colors.black),
                           ),
                           const SizedBox(height: 8),
@@ -319,18 +323,18 @@ class _ActivityDetailPageState extends State<ActivityDetailPage>{
                         IconButton(
                           icon: Icon(Icons.thumb_up, color: data['isLiked'] ? Colors.blue : null),
                           onPressed: () {
-                            _handleLikeButtonPress(widget.activityId, data['isLiked']);
+                            handleLikeButtonPress(widget.activityId, data['isLiked']);
                           },
                         ),
                         IconButton(
                           icon: Icon(data['isFavorite'] ? Icons.favorite : Icons.favorite_border, color: data['isFavorite'] ? Colors.red : null),
                           onPressed: () {
-                            _handleFavoriteButtonPress(widget.activityId, data['isFavorite']);
+                            handleFavoriteButtonPress(widget.activityId, data['isFavorite']);
                           },
                         ),
                         GestureDetector(
                           onTap: () {
-                            _handleSubscribeButtonPress(widget.activityId, data['isSubscribed']);
+                            handleSubscribeButtonPress(widget.activityId, data['isSubscribed']);
                           },
                           child: Container(
                             padding: const EdgeInsets.all(8),
