@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 import 'sustainability_tips.dart';
 import 'create_post/create_post.dart';
 import 'get_activities/get_activities.dart';
-import 'post_info..dart';
+import 'post_info.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -21,10 +21,16 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final ActivityManager _activityManager = ActivityManager();
+  late final FirebaseFirestore _firestore;
+  late final User? _currentUser;
+  late final ActivityManager _activityManager;
+
   @override
   void initState() {
     super.initState();
+    _firestore = FirebaseFirestore.instance;
+    _currentUser = FirebaseAuth.instance.currentUser;
+    _activityManager = ActivityManager(_firestore, _currentUser);
     WidgetsBinding.instance.addPostFrameCallback((_) => _checkUserInfoAndShowTip(context));
   }
 

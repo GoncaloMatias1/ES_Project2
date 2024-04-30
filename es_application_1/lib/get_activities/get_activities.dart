@@ -2,19 +2,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:math';
 
+/// Tests Done
+
 class ActivityManager {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final User? _currentUser = FirebaseAuth.instance.currentUser;
-  
+  final FirebaseFirestore _firestore;
+  final User? _currentUser;
+
   List<String> interests = [];
   double distance = 0;
   GeoPoint userLocation = const GeoPoint(0, 0);
 
-  ActivityManager() {
-    _fetchUserData();
+  ActivityManager(this._firestore, this._currentUser) {
+    fetchUserData();
   }
 
-  Future<void> _fetchUserData() async {
+  Future<void> fetchUserData() async {
     if (_currentUser != null) {
       try {
         DocumentSnapshot userDoc = await _firestore.collection('users').doc(_currentUser.uid).get();
@@ -35,9 +37,9 @@ class ActivityManager {
       for (DocumentSnapshot postDoc in postSnapshot.docs) {
         List<String> postCategories = List<String>.from(postDoc.get('categories'));
         String creator = postDoc.get('user');
-        if (_currentUser?.uid != creator){ /// Does not show post from the user logged in
-          if (_categoriesMatchInterests(postCategories, interests)) {
-            double activityDistance = _calculateDistance(
+        if (_currentUser?.uid != creator) { /// Does not show post from the user logged in
+          if (categoriesMatchInterests(postCategories, interests)) {
+            double activityDistance = calculateDistance(
               userLocation.latitude,
               userLocation.longitude,
               postDoc['location'].latitude,
@@ -45,7 +47,7 @@ class ActivityManager {
             );
 
             if (activityDistance <= distance * 1000) { /// Check distance
-                activities.add(postDoc);
+              activities.add(postDoc);
             }
           }
         }
@@ -59,7 +61,7 @@ class ActivityManager {
   }
 
 
-  bool _categoriesMatchInterests(List<String> activityCategories, List<String> userInterests) {
+  bool categoriesMatchInterests(List<String> activityCategories, List<String> userInterests) {
     for (String category in activityCategories) {
       if (userInterests.contains(category)) {
         return true;
@@ -68,21 +70,19 @@ class ActivityManager {
     return false;
   }
 
-  double _calculateDistance(double userLat, double userLon, double activityLat, double activityLon) {
-    // Calculate distance between two points using Haversine formula
-    const int earthRadius = 6371;
-    double latDiff = _degreesToRadians(activityLat - userLat);
-    double lonDiff = _degreesToRadians(activityLon - userLon);
-    double a = 
-        (sin(latDiff / 2) * sin(latDiff / 2)) +
-        (cos(_degreesToRadians(userLat)) * cos(_degreesToRadians(activityLat)) *
-        sin(lonDiff / 2) * sin(lonDiff / 2));
-    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-    double distance = earthRadius * c;
-    return distance;
-  }
+  double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+  const int earthRadius = 6371; // Earth radius in kilometers
+  double latDiff = degreesToRadians(lat2 - lat1);
+  double lonDiff = degreesToRadians(lon2 - lon1);
+  double a = sin(latDiff / 2) * sin(latDiff / 2) +
+      cos(degreesToRadians(lat1)) * cos(degreesToRadians(lat2)) *
+      sin(lonDiff / 2) * sin(lonDiff / 2);
+  double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+  return earthRadius * c;
+}
 
-  double _degreesToRadians(double degrees) {
+
+  double degreesToRadians(double degrees) {
     return degrees * pi / 180;
   }
 }
