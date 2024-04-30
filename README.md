@@ -76,7 +76,7 @@ Notifications will also be shown to users regarding activities that will take pl
 
 ## Sprint 1
 
-### Sumary
+### Summary
  - During this sprint we managed to implement some of the planned user stories, however, as some turned out to be more complex than initially anticipated, we were not able to implement everything. 
 Others were practically implemented, all that remains is to add the page-switching logic. Now that we know what went wrong in sprint 1, we want to improve and avoid making the same mistakes.
 
@@ -86,7 +86,27 @@ Others were practically implemented, all that remains is to add the page-switchi
 - ![Users can reset their password](es_application_1/lib/authentication/login_screen.dart)
 - ![Users can login to their account](es_application_1/lib/authentication/login_screen.dart)
 - ![Users can edit their profile](es_application_1/lib/profile_page.dart) -> Not fully implemented
-- ![Users can customize their settings](es_application_1/profile_page.dart) -> Not fully implemented
+- ![Users can customize their settings](es_application_1/lib/profile_page.dart) -> Not fully implemented
 
 ### Current progress
 ![Sprint 1 progress](images/template_sprint1.png)
+
+
+## Sprint 2
+
+### Summary
+ - During this sprint, we focused on implementing the logic to create and see posts. As we knew that the post feature would be hard to develop, we just added some other functionalities such as editing the profile picture, deleting the account and making tips to appear when the application is opened.
+Although we managed the time better than in Sprint 1, we still left some features to implement. From now on, since the most hard-working feature is done, we think that it will be possible to accomplish the planned functionalities in time.
+
+### Implemented Functionalities
+- ![Users can customize their settings](es_application_1/lib/profile_page.dart)
+- ![Users can send feedback to help improve the application](es_application_1/lib/send_feedback.dart)
+- ![Users can receive sustainable tips when opening the application](es_application_1/lib/sustainability_tips.dart)
+- ![Users can delete their account](es_application_1/lib/profile_page.dart)
+- ![Users can create posts](es_application_1/lib/create_post/create_post.dart)
+- ![Users can see posts from other users](es_application_1/lib/post_info..dart)
+- ![Users can be part of a ranking system](es_application_1/lib/ranking_page.dart) -> Not fully implemented
+- ![Users can edit their profile](es_application_1/lib/profile_page.dart) -> Not fully implemented
+
+### Current progress
+![Sprint 2 progress](images/template_sprint2.png)
