@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
+/// Some tests Done
+
 class LocationPicker extends StatefulWidget {
   final Function(LatLng)? onLocationSelected;
 
   LocationPicker({Key? key, this.onLocationSelected}) : super(key: key);
 
   @override
-  _LocationPickerState createState() => _LocationPickerState();
+  LocationPickerState createState() => LocationPickerState();
 }
 
-class _LocationPickerState extends State<LocationPicker> {
+class LocationPickerState extends State<LocationPicker> {
   GoogleMapController? _mapController;
   final Set<Marker> _markers = {};
   Position? _currentPosition;
@@ -19,24 +21,24 @@ class _LocationPickerState extends State<LocationPicker> {
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation();
+    getCurrentLocation();
   }
-
-  void _getCurrentLocation() async {
+  
+  void getCurrentLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
       setState(() {
         _currentPosition = position;
-        _addMarker(LatLng(position.latitude, position.longitude));
+        addMarker(LatLng(position.latitude, position.longitude));
       });
     } catch (e) {
       print('Error getting current location: $e');
     }
   }
 
-  void _addMarker(LatLng position) {
+  void addMarker(LatLng position) {
     setState(() {
       _markers.clear();
       _markers.add(
@@ -48,7 +50,7 @@ class _LocationPickerState extends State<LocationPicker> {
     });
   }
 
-  void _moveToCurrentLocation() {
+  void moveToCurrentLocation() {
     if (_currentPosition != null && _mapController != null) {
       _mapController!.animateCamera(
         CameraUpdate.newCameraPosition(
@@ -58,11 +60,11 @@ class _LocationPickerState extends State<LocationPicker> {
           ),
         ),
       );
-      _addMarker(LatLng(_currentPosition!.latitude, _currentPosition!.longitude));
+      addMarker(LatLng(_currentPosition!.latitude, _currentPosition!.longitude));
     }
   }
 
-  void _saveLocation() {
+  void saveLocation() {
     if (widget.onLocationSelected != null && _markers.isNotEmpty) {
       widget.onLocationSelected!(_markers.first.position);
       Navigator.pop(context);
@@ -94,7 +96,7 @@ class _LocationPickerState extends State<LocationPicker> {
                   onMapCreated: (controller) {
                     _mapController = controller;
                   },
-                  onTap: _addMarker,
+                  onTap: addMarker,
                   markers: _markers,
                   myLocationEnabled: true,
                   myLocationButtonEnabled: false,
@@ -103,7 +105,7 @@ class _LocationPickerState extends State<LocationPicker> {
                   top: 16.0,
                   left: 16.0,
                   child: ElevatedButton(
-                    onPressed: _moveToCurrentLocation,
+                    onPressed: moveToCurrentLocation,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green[800],
                       foregroundColor: Colors.white,
@@ -119,7 +121,7 @@ class _LocationPickerState extends State<LocationPicker> {
             ),
           ),
           ElevatedButton(
-            onPressed: _saveLocation,
+            onPressed: saveLocation,
             child: const Text('Save Location'),
           ),
         ],

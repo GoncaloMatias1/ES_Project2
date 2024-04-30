@@ -5,14 +5,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+/// Some tests done
+
 class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({Key? key}) : super(key: key);
 
   @override
-  _CreatePostScreenState createState() => _CreatePostScreenState();
+  CreatePostScreenState createState() => CreatePostScreenState();
+
+  static CreatePostScreenState? of(BuildContext context) =>
+      context.findAncestorStateOfType<CreatePostScreenState>();
 }
 
-class _CreatePostScreenState extends State<CreatePostScreen> {
+class CreatePostScreenState extends State<CreatePostScreen> {
   LatLng? _selectedLocation;
   DateTime? _selectedDate;
   TimeOfDay? _startTime;
@@ -27,16 +32,16 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   @override
   void initState() {
     super.initState();
-    _loadCategories();
+    loadCategories();
   }
 
-  String _formatTimeOfDay(TimeOfDay timeOfDay) {
+  String formatTimeOfDay(TimeOfDay timeOfDay) {
     final now = DateTime.now();
     final dateTime = DateTime(now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
     return DateFormat.Hm().format(dateTime);
   }
 
-  Future<void> _loadCategories() async {
+  Future<void> loadCategories() async {
     try {
       DocumentSnapshot categoriesDoc =
       await FirebaseFirestore.instance.collection('categories').doc('categories').get();
@@ -67,7 +72,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     }
   }
 
-  Future<void> _selectStartTime(BuildContext context) async {
+  Future<void> selectStartTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
       initialTime: _startTime ?? TimeOfDay.now(),
@@ -86,7 +91,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     }
   }
 
-  Future<void> _selectEndTime(BuildContext context) async {
+  Future<void> selectEndTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
       initialTime: _endTime ?? TimeOfDay.now(),
@@ -105,7 +110,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     }
   }
 
-  void _submitPost() async {
+  void submitPost() async {
     if (_selectedDate != null &&
         _activityNameController.text.isNotEmpty &&
         _descriptionController.text.isNotEmpty &&
@@ -120,8 +125,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           'activityName': _activityNameController.text,
           'description': _descriptionController.text,
           'date': _selectedDate!,
-          'startTime': _formatTimeOfDay(_startTime!), // Convert TimeOfDay to string
-          'endTime': _formatTimeOfDay(_endTime!),
+          'startTime': formatTimeOfDay(_startTime!), // Convert TimeOfDay to string
+          'endTime': formatTimeOfDay(_endTime!),
           'location': GeoPoint(_selectedLocation!.latitude, _selectedLocation!.longitude),
           'categories': _selectedCategories,
           'user': user?.uid
@@ -164,7 +169,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
 
 
-  void _updateLocation(LatLng newLocation) {
+  void updateLocation(LatLng newLocation) {
     setState(() {
       _selectedLocation = newLocation;
       _locationController.text = '${newLocation.latitude}, ${newLocation.longitude}';
@@ -219,7 +224,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   Expanded(
                     child: TextFormField(
                       onTap: () {
-                        _selectStartTime(context);
+                        selectStartTime(context);
                       },
                       readOnly: true,
                       controller: TextEditingController(
@@ -235,7 +240,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   Expanded(
                     child: TextFormField(
                       onTap: () {
-                        _selectEndTime(context);
+                        selectEndTime(context);
                       },
                       readOnly: true,
                       controller: TextEditingController(
@@ -266,12 +271,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => LocationPicker(
-                          onLocationSelected: _updateLocation,
+                          onLocationSelected: updateLocation,
                         ),
                       ),
                     );
                     if (selectedLocation != null && selectedLocation is LatLng) {
-                      _updateLocation(selectedLocation);
+                      updateLocation(selectedLocation);
                     }
                   },
                   child: const Text('Choose Location'),
@@ -290,7 +295,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               const SizedBox(height: 16.0),
               Center(
                 child: ElevatedButton(
-                  onPressed: _submitPost,
+                  onPressed: submitPost,
                   child: const Text('Submit'),
                 ),
               ),
