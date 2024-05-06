@@ -101,6 +101,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,6 +198,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: const Text(
                     'Send feedback',
                     style: TextStyle(color: Colors.green),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: _logout,
+                  child: const Text(
+                    'Log out',
+                    style: TextStyle(color: Colors.red),
                   ),
                 ),
                 ElevatedButton(
