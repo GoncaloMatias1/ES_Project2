@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'profile_page.dart';
 import 'create_post/create_post.dart';
 import 'main_page.dart';
+import 'ranking_page.dart';
 
 class FavoritesPage extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
     fetchFavoritePosts();
   }
 
-  fetchFavoritePosts() async {
+  void fetchFavoritePosts() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final userData = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
@@ -32,6 +33,21 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
       favoritePosts = await Future.wait(postFutures);
       setState(() {});
+    }
+  }
+
+  void removeFavorite(String postId) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentReference userDocRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+      userDocRef.update({
+        'favorites': FieldValue.arrayRemove([postId])
+      });
+
+      setState(() {
+        favoritePosts.removeWhere((post) => post.id == postId);
+      });
     }
   }
 
@@ -48,9 +64,16 @@ class _FavoritesPageState extends State<FavoritesPage> {
         itemCount: favoritePosts.length,
         itemBuilder: (context, index) {
           Map<String, dynamic> postData = favoritePosts[index].data() as Map<String, dynamic>;
-          return ListTile(
-            title: Text(postData['activityName'] ?? 'No title available'),
-            subtitle: Text(postData['description'] ?? 'No description available'),
+          return Card(
+            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            child: ListTile(
+              title: Text(postData['activityName'] ?? 'No title available'),
+              subtitle: Text(postData['description'] ?? 'No description available'),
+              trailing: IconButton(
+                icon: Icon(Icons.remove_circle_outline, color: Colors.red),
+                onPressed: () => removeFavorite(favoritePosts[index].id),
+              ),
+            ),
           );
         },
       ),
@@ -71,6 +94,16 @@ class _FavoritesPageState extends State<FavoritesPage> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => const MainPage()),
+              );
+            },
+          ),
+          _buildTabItem(
+            icon: Icons.leaderboard,
+            context: context,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const RankingPage()),
               );
             },
           ),
