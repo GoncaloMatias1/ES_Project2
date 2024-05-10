@@ -1,8 +1,10 @@
 import 'package:es_application_1/profile_page.dart';
+import 'package:es_application_1/ranking_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'create_post/create_post.dart';
 import 'favorites_page.dart';
 import 'main_page.dart';
 import 'dart:async';
@@ -152,7 +154,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
                 onTap: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => FavoritesPage()),
                   );
@@ -165,6 +167,52 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   ),
                   child: const Icon(
                     Icons.favorite,
+                    color: Colors.green,
+                    size: 30.0,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const CreatePostScreen()),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.green,
+                    size: 30.0,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const RankingPage()),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: const Icon(
+                    Icons.leaderboard,
                     color: Colors.green,
                     size: 30.0,
                   ),

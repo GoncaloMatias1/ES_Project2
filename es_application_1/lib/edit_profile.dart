@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:es_application_1/profile_page.dart';
+import 'package:es_application_1/ranking_page.dart';
 import 'package:flutter/material.dart';
+import 'create_post/create_post.dart';
 import 'favorites_page.dart';
 import 'main_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -84,17 +86,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     if (pickedFile != null) {
       try {
-        // Upload the image to Firebase Storage
         String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
         String fileName = '$uid.jpg';
         File imageFile = File(pickedFile.path);
         firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance.ref().child('profile_pic/$fileName');
         await ref.putFile(imageFile);
 
-        // Get the download URL of the uploaded image
         String downloadURL = await ref.getDownloadURL();
 
-        // Update the profile picture URL in Firestore
         await _updateProfilePictureURL(downloadURL);
       } catch (e) {
         print('Error uploading image: $e');
@@ -118,28 +117,30 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(height: 20),
               GestureDetector(
                 onTap: _selectImageURLFromGallery,
-                child: Stack(
-                  children: [
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundColor: _imageUrl != null ? null : Colors.green[200],
-                      backgroundImage: _imageUrl != null ? NetworkImage(_imageUrl!) : null,
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                        ),
-                        child: IconButton(
-                          icon: Icon(Icons.edit, color: Colors.green),
-                          onPressed: _selectImageURLFromGallery,
+                child: Center(
+                  child: Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 60,
+                        backgroundColor: _imageUrl != null ? null : Colors.green[200],
+                        backgroundImage: _imageUrl != null ? NetworkImage(_imageUrl!) : null,
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: IconButton(
+                            icon: Icon(Icons.edit, color: Colors.green),
+                            onPressed: _selectImageURLFromGallery,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -278,7 +279,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
                 onTap: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => FavoritesPage()),
                   );
@@ -291,6 +292,52 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                   child: const Icon(
                     Icons.favorite,
+                    color: Colors.green,
+                    size: 30.0,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const CreatePostScreen()),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.green,
+                    size: 30.0,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const RankingPage()),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: const Icon(
+                    Icons.leaderboard,
                     color: Colors.green,
                     size: 30.0,
                   ),
