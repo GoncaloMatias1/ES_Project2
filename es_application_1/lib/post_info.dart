@@ -135,19 +135,20 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
       final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
       final userData = await userRef.get();
       if (userData.exists) {
-        List<dynamic> favoriteActivities = userData.data()?['favorites'] as List<dynamic>? ?? [];
-
+        var currentFavorites = userData.data()?['favorites'] as List<dynamic>? ?? [];
         if (isFavorite) {
-          favoriteActivities.remove(postId);
+          currentFavorites.remove(postId);
         } else {
-          favoriteActivities.add(postId);
+          if (!currentFavorites.contains(postId)) {
+            currentFavorites.add(postId);
+          }
         }
-        await userRef.update({'favorites': favoriteActivities});
+        await userRef.update({'favorites': currentFavorites});
       }
+      setState(() {
+        isFavorite = !isFavorite;
+      });
     }
-    setState(() {
-      isFavorite = !isFavorite;
-    });
   }
 
   Future<void> handleSubscribeButtonPress(String postId, bool isSubscribed) async {

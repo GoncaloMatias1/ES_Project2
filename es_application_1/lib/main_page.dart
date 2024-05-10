@@ -34,16 +34,6 @@ class _MainPageState extends State<MainPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _checkUserInfoAndShowTip(context));
   }
 
-  Future<void> _logout(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('email');
-    await prefs.remove('password');
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-    );
-  }
-
   Future<void> _checkUserInfoAndShowTip(BuildContext context) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -156,9 +146,9 @@ class _MainPageState extends State<MainPage> {
                                   color: userProfilePhoto != null ? Colors.transparent : Colors.green,
                                   image: userProfilePhoto != null
                                       ? DecorationImage(
-                                          image: NetworkImage(userProfilePhoto),
-                                          fit: BoxFit.cover,
-                                        )
+                                    image: NetworkImage(userProfilePhoto),
+                                    fit: BoxFit.cover,
+                                  )
                                       : null,
                                 ),
                                 child: userProfilePhoto == null
@@ -218,11 +208,18 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         title: const Text('EcoMobilize'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => _logout(context),
-          ),
+          Container(
+            margin: const EdgeInsets.only(right: 10),
+            child: Row(
+              children: <Widget>[
+                Text('Your Points: 0'),
+                SizedBox(width: 5),
+                Icon(Icons.star, color: Colors.yellow),
+              ],
+            ),
+          )
         ],
+        automaticallyImplyLeading: false,
       ),
       body: FutureBuilder<List<DocumentSnapshot>>(
         future: _activityManager.getActivities(),
