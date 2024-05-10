@@ -5,6 +5,7 @@ import 'profile_page.dart';
 import 'create_post/create_post.dart';
 import 'main_page.dart';
 import 'ranking_page.dart';
+import 'post_info.dart';
 
 class FavoritesPage extends StatefulWidget {
   @override
@@ -73,6 +74,14 @@ class _FavoritesPageState extends State<FavoritesPage> {
                 icon: Icon(Icons.remove_circle_outline, color: Colors.red),
                 onPressed: () => removeFavorite(favoritePosts[index].id),
               ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ActivityDetailPage(activityId: favoritePosts[index].id),
+                  ),
+                );
+              },
             ),
           );
         },
