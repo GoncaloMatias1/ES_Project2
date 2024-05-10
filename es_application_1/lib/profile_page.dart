@@ -9,6 +9,7 @@ import 'send_feedback.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'welcome_screen.dart';
+import 'post_info.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -64,9 +65,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       // If an error occurs
     }
   }
-
-
-
 
   Future<void> deleteAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -238,6 +236,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: const Text(
                     'Delete account',
                     style: TextStyle(color: Colors.red),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Your Posts',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 150,
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance.collection('posts').where('user', isEqualTo: FirebaseAuth.instance.currentUser?.uid).snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            DocumentSnapshot post = snapshot.data!.docs[index];
+                            return GestureDetector(
+                              onTap: () {
+                                // Navigate to the post page
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => ActivityDetailPage(activityId: post.id,)),
+                                );
+                              },
+                              child: Container(
+                                width: 200,
+                                margin: const EdgeInsets.symmetric(horizontal: 8),
+                                color: Colors.green[100],
+                                child: Center(child: Text(post['activityName'])),
+                              ),
+                            );
+                          },
+                        );
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                    },
                   ),
                 ),
               ],

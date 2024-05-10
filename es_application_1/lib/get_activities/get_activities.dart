@@ -34,20 +34,31 @@ class ActivityManager {
       List<DocumentSnapshot> activities = [];
       QuerySnapshot postSnapshot = await _firestore.collection('posts').get();
 
+      DateTime currentDate = DateTime.now();
+      DateTime eightHoursAgo = currentDate.subtract(Duration(hours: 8));
+
       for (DocumentSnapshot postDoc in postSnapshot.docs) {
         List<String> postCategories = List<String>.from(postDoc.get('categories'));
         String creator = postDoc.get('user');
         if (_currentUser?.uid != creator) { /// Does not show post from the user logged in
           if (categoriesMatchInterests(postCategories, interests)) {
-            double activityDistance = calculateDistance(
-              userLocation.latitude,
-              userLocation.longitude,
-              postDoc['location'].latitude,
-              postDoc['location'].longitude,
-            );
+            /// Check if the activity hasn'i occur
+            DateTime activityDate = postDoc['date'].toDate();
+            String startTime = postDoc['startTime'];
+            DateTime combinedDateTime = DateTime(activityDate.year, activityDate.month, activityDate.day,
+              int.parse(startTime.split(':')[0]), int.parse(startTime.split(':')[1]));
 
-            if (activityDistance <= distance * 1000) { /// Check distance
-              activities.add(postDoc);
+            if (combinedDateTime.isAfter(eightHoursAgo)) {
+              double activityDistance = calculateDistance(
+                userLocation.latitude,
+                userLocation.longitude,
+                postDoc['location'].latitude,
+                postDoc['location'].longitude,
+              );
+
+              if (activityDistance <= distance * 1000) { /// Check distance
+                activities.add(postDoc);
+              }
             }
           }
         }

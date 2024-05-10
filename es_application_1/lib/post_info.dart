@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'event_confirmation.dart';
 
 /// Tests Done
 
@@ -39,6 +40,7 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
     final String startTime = activityData['startTime'] as String;
     final String endTime = activityData['endTime'] as String;
     final Timestamp timestamp = activityData['date'] as Timestamp;
+    final String ownerId = activityData['user'];
 
     final DateTime date = timestamp.toDate();
     final DateFormat formatter = DateFormat('dd/MM/yyyy');
@@ -87,6 +89,7 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
       'date': formattedDate,
       'userName': userName,
       'userProfilePhoto': userProfilePhoto,
+      'ownerId': ownerId,
       'isLiked': isLiked,
       'isFavorite': isFavorite,
       'isSubscribed': isSubscribed,
@@ -352,6 +355,18 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
                       ],
                     ),
                     const SizedBox(height: 16),
+                    if (FirebaseAuth.instance.currentUser?.uid == data['ownerId'])
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EventConfirmationPage(postId: widget.activityId),
+                            ),
+                          );
+                        },
+                        child: const Text('Confirm Participation'),
+                      ),
                   ],
                 ),
               ),
