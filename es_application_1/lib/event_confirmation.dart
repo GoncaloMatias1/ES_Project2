@@ -112,8 +112,12 @@ class EventConfirmationPage extends StatelessWidget {
                   ),
                 );
               },
-            );
+            );  
+          } else if (now.isAfter(activityEndTime)) {
+            // Activity already happened
+            return Center(child: Text('The activity already happened'));
           } else {
+            // Activity hasn't started yet
             return Center(child: Text('The activity hasn\'t started yet'));
           }
         },
