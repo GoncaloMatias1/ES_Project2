@@ -18,10 +18,10 @@ class EventConfirmationPage extends StatelessWidget {
           future: userDataFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
             if (!snapshot.hasData) {
-              return Center(child: Text('User data not found'));
+              return const Center(child: Text('User data not found'));
             }
 
             var userData = snapshot.data!.data() as Map<String, dynamic>;
@@ -30,7 +30,7 @@ class EventConfirmationPage extends StatelessWidget {
             String profilePictureURL = userData['profilePictureURL'] ?? '';
 
             return AlertDialog(
-              title: Text('Confirm Participation'),
+              title: const Text('Confirm Participation'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +49,7 @@ class EventConfirmationPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('No'),
+                  child: const Text('No'),
                 ),
                 TextButton(
                   onPressed: () async {
@@ -61,7 +61,7 @@ class EventConfirmationPage extends StatelessWidget {
                     });
 
                     // Update user points
-                    int pointsToAdd = value ? 10 : -10;
+                    int pointsToAdd = value ? 10 : 5;
                     FirebaseFirestore.instance.collection('users').doc(userId).set(
                       {'points': FieldValue.increment(pointsToAdd)},
                       SetOptions(merge: true),
@@ -69,7 +69,7 @@ class EventConfirmationPage extends StatelessWidget {
 
                     Navigator.of(context).pop(); // Close the dialog
                   },
-                  child: Text('Yes'),
+                  child: const Text('Yes'),
                 ),
               ],
             );
@@ -117,13 +117,16 @@ class EventConfirmationPage extends StatelessWidget {
           if (isActivityOngoing) {
 
             if (subscribedUsers.isEmpty) {
-              return Center(child: Text('No more subscribed people'));
+              return const Center(child: Text('No more subscribed people'));
             }
             return ListView.builder(
               itemCount: subscribedUsers.length,
               itemBuilder: (context, index) {
                 String userId = subscribedUsers[index];
                 bool isParticipated = participatedUsers.contains(userId);
+                bool isOnTime = postData['onTimeUsers'] != null && postData['onTimeUsers'].contains(userId);
+                bool isLate = postData['lateUsers'] != null && postData['lateUsers'].contains(userId);
+
                 return ListTile(
                   leading: FutureBuilder<DocumentSnapshot>(
                     future: FirebaseFirestore.instance.collection('users').doc(userId).get(),
@@ -160,24 +163,22 @@ class EventConfirmationPage extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Checkbox(
-                        value: isParticipated && postData['onTime'],
+                        value: isParticipated && isOnTime,
                         onChanged: (value) {
                           if (value != null) {
                             // Call function to update participation status
                             updateParticipationStatus(context, userId, value);
-
                           }
                         },
                       ),
                       const Text('On time'),
                       const SizedBox(width: 10),
                       Checkbox(
-                        value: isParticipated && !postData['onTime'],
+                        value: isParticipated && isLate,
                         onChanged: (value) {
                           if (value != null) {
                             // Call function to update participation status
-                            updateParticipationStatus(context, userId, value);
-
+                            updateParticipationStatus(context, userId, !value); // Invert the value for 'Late'
                           }
                         },
                       ),
@@ -186,7 +187,8 @@ class EventConfirmationPage extends StatelessWidget {
                   ),
                 );
               },
-            );  
+            );
+
           } else if (now.isAfter(activityEndTime)) {
             // Activity already happened
             return const Center(child: Text('The activity already happened'));
