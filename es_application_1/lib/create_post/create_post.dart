@@ -134,6 +134,9 @@ class CreatePostScreenState extends State<CreatePostScreen> {
 
         await FirebaseFirestore.instance.collection('posts').add(postData);
 
+        // Update user points
+        await updateUserPoints(20);
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Post submitted successfully'),
@@ -167,7 +170,17 @@ class CreatePostScreenState extends State<CreatePostScreen> {
     }
   }
 
-
+  Future<void> updateUserPoints(int pointsToAdd) async {
+    try {
+      // Update user points
+      await FirebaseFirestore.instance.collection('users').doc(user?.uid).set(
+        {'points': FieldValue.increment(pointsToAdd)},
+        SetOptions(merge: true),
+      );
+    } catch (e) {
+      print('Error updating user points: $e');
+    }
+  }
 
   void updateLocation(LatLng newLocation) {
     setState(() {
