@@ -24,6 +24,7 @@ class _MainPageState extends State<MainPage> {
   late final FirebaseFirestore _firestore;
   late final User? _currentUser;
   late final ActivityManager _activityManager;
+  int _userPoints = 0;
 
   @override
   void initState() {
@@ -32,6 +33,18 @@ class _MainPageState extends State<MainPage> {
     _currentUser = FirebaseAuth.instance.currentUser;
     _activityManager = ActivityManager(_firestore, _currentUser);
     WidgetsBinding.instance.addPostFrameCallback((_) => _checkUserInfoAndShowTip(context));
+    _loadUserPoints();
+  }
+
+  Future<void> _loadUserPoints() async {
+    try {
+      final userData = await FirebaseFirestore.instance.collection('users').doc(_currentUser?.uid).get();
+      setState(() {
+        _userPoints = userData.get('points') ?? 0; // Get user points or default to 0
+      });
+    } catch (e) {
+      print('Error loading user points: $e');
+    }
   }
 
   Future<void> _checkUserInfoAndShowTip(BuildContext context) async {
@@ -212,9 +225,9 @@ class _MainPageState extends State<MainPage> {
             margin: const EdgeInsets.only(right: 10),
             child: Row(
               children: <Widget>[
-                Text('Your Points: 0'),
-                SizedBox(width: 5),
-                Icon(Icons.star, color: Colors.yellow),
+                Text('Your Points: $_userPoints'), // Display user points here
+                const SizedBox(width: 5),
+                const Icon(Icons.star, color: Colors.yellow),
               ],
             ),
           )

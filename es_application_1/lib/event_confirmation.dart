@@ -6,21 +6,95 @@ class EventConfirmationPage extends StatelessWidget {
 
   EventConfirmationPage({required this.postId});
 
+  // Function to handle updating participation status
+  void updateParticipationStatus(BuildContext context, String userId, bool value) {
+    // Retrieve user data
+    Future<DocumentSnapshot> userDataFuture = FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return FutureBuilder<DocumentSnapshot>(
+          future: userDataFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (!snapshot.hasData) {
+              return Center(child: Text('User data not found'));
+            }
+
+            var userData = snapshot.data!.data() as Map<String, dynamic>;
+            String firstName = userData['firstName'] ?? '';
+            String lastName = userData['lastName'] ?? '';
+            String profilePictureURL = userData['profilePictureURL'] ?? '';
+
+            return AlertDialog(
+              title: Text('Confirm Participation'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(profilePictureURL),
+                    ),
+                    title: Text('$firstName $lastName'),
+                  ),
+                  Text('Are you sure you want to register the presence as ${value ? 'On time' : 'Late'}?'),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('No'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    // Update participation status in the database
+                    await FirebaseFirestore.instance.collection('posts').doc(postId).update({
+                      'subscribed': FieldValue.arrayRemove([userId]),
+                      'participated': FieldValue.arrayUnion([userId]),
+                      'onTime': value,
+                    });
+
+                    // Update user points
+                    int pointsToAdd = value ? 10 : -10;
+                    FirebaseFirestore.instance.collection('users').doc(userId).set(
+                      {'points': FieldValue.increment(pointsToAdd)},
+                      SetOptions(merge: true),
+                    );
+
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: Text('Yes'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Confirm Participation'),
+        title: const Text('Confirm Participation'),
       ),
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance.collection('posts').doc(postId).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (!snapshot.hasData) {
-            return Center(child: Text('Post not found'));
+            return const Center(child: Text('Post not found'));
           }
 
           var postData = snapshot.data!.data() as Map<String, dynamic>;
@@ -41,6 +115,10 @@ class EventConfirmationPage extends StatelessWidget {
           bool isActivityOngoing = now.isAfter(activityStartTime) && now.isBefore(activityEndTime);
 
           if (isActivityOngoing) {
+
+            if (subscribedUsers.isEmpty) {
+              return Center(child: Text('No more subscribed people'));
+            }
             return ListView.builder(
               itemCount: subscribedUsers.length,
               itemBuilder: (context, index) {
@@ -51,10 +129,10 @@ class EventConfirmationPage extends StatelessWidget {
                     future: FirebaseFirestore.instance.collection('users').doc(userId).get(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircleAvatar();
+                        return const CircleAvatar();
                       }
                       if (!snapshot.hasData) {
-                        return CircleAvatar();
+                        return const CircleAvatar();
                       }
                       var userData = snapshot.data!.data() as Map<String, dynamic>;
                       String profilePictureURL = userData['profilePictureURL'] ?? '';
@@ -67,10 +145,10 @@ class EventConfirmationPage extends StatelessWidget {
                     future: FirebaseFirestore.instance.collection('users').doc(userId).get(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text('Loading...');
+                        return const Text('Loading...');
                       }
                       if (!snapshot.hasData) {
-                        return Text('User not found');
+                        return const Text('User not found');
                       }
                       var userData = snapshot.data!.data() as Map<String, dynamic>;
                       String firstName = userData['firstName'] ?? '';
@@ -85,29 +163,25 @@ class EventConfirmationPage extends StatelessWidget {
                         value: isParticipated && postData['onTime'],
                         onChanged: (value) {
                           if (value != null) {
-                            // Update participated users list in the database
-                            FirebaseFirestore.instance.collection('posts').doc(postId).update({
-                              'participated': FieldValue.arrayUnion([userId]),
-                              'onTime': value,
-                            });
+                            // Call function to update participation status
+                            updateParticipationStatus(context, userId, value);
+
                           }
                         },
                       ),
-                      Text('On time'),
-                      SizedBox(width: 10),
+                      const Text('On time'),
+                      const SizedBox(width: 10),
                       Checkbox(
                         value: isParticipated && !postData['onTime'],
                         onChanged: (value) {
                           if (value != null) {
-                            // Update participated users list in the database
-                            FirebaseFirestore.instance.collection('posts').doc(postId).update({
-                              'participated': FieldValue.arrayUnion([userId]),
-                              'onTime': !value,
-                            });
+                            // Call function to update participation status
+                            updateParticipationStatus(context, userId, value);
+
                           }
                         },
                       ),
-                      Text('Late'),
+                      const Text('Late'),
                     ],
                   ),
                 );
@@ -115,10 +189,10 @@ class EventConfirmationPage extends StatelessWidget {
             );  
           } else if (now.isAfter(activityEndTime)) {
             // Activity already happened
-            return Center(child: Text('The activity already happened'));
+            return const Center(child: Text('The activity already happened'));
           } else {
             // Activity hasn't started yet
-            return Center(child: Text('The activity hasn\'t started yet'));
+            return const Center(child: Text('The activity hasn\'t started yet'));
           }
         },
       ),
