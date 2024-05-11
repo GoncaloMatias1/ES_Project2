@@ -225,7 +225,7 @@ class _MainPageState extends State<MainPage> {
             margin: const EdgeInsets.only(right: 10),
             child: Row(
               children: <Widget>[
-                Text('Your Points: $_userPoints'), // Display user points here
+                Text('Your Points: $_userPoints'),
                 const SizedBox(width: 5),
                 const Icon(Icons.star, color: Colors.yellow),
               ],

@@ -186,10 +186,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: Container(
                                 width: 200,
                                 margin: const EdgeInsets.symmetric(horizontal: 8),
-                                padding: const EdgeInsets.all(8), // Added padding
+                                padding: const EdgeInsets.all(8),
                                 color: Colors.green[100],
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center, // Align activity name to the center
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Align(
                                       alignment: Alignment.center,
