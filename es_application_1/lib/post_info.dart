@@ -21,6 +21,23 @@ class ActivityDetailPage extends StatefulWidget {
 }
 
 class ActivityDetailPageState extends State<ActivityDetailPage>{
+  late bool postHasHappened;
+
+  bool calculatePostHasHappened(Timestamp postTimestamp, String startTime) {
+    DateTime postDate = postTimestamp.toDate();
+
+    // Parse the start time string
+    List<String> startTimeParts = startTime.split(':');
+    int startHour = int.parse(startTimeParts[0]);
+    int startMinute = int.parse(startTimeParts[1]);
+
+    DateTime postDateTime = DateTime(postDate.year, postDate.month, postDate.day, startHour, startMinute);
+
+    DateTime now = DateTime.now();
+
+    return now.isAfter(postDateTime);
+  }
+
   Future<Map<String, dynamic>> loadData(String activityId) async {
     final user = FirebaseAuth.instance.currentUser;
     final activitySnapshot = await FirebaseFirestore.instance.collection('posts').doc(activityId).get();
@@ -93,6 +110,7 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
       'isLiked': isLiked,
       'isFavorite': isFavorite,
       'isSubscribed': isSubscribed,
+      'postTimestamp': timestamp,
     };
   }
 
@@ -250,6 +268,9 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
             final data = snapshot.data!;
             final LatLng activityLocation = LatLng(data['location'].latitude, data['location'].longitude);
 
+            // Calculate whether the post has happened
+            postHasHappened = calculatePostHasHappened(data['postTimestamp'], data['startTime']);
+
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Container(
@@ -400,7 +421,7 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
                         },
                         child: const Text('Confirm Participation'),
                       ),
-                    if (FirebaseAuth.instance.currentUser?.uid == data['ownerId'])
+                    if (FirebaseAuth.instance.currentUser?.uid == data['ownerId'] && !postHasHappened)
                       ElevatedButton(
                         onPressed: () {
                           deletePost();
