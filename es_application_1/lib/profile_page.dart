@@ -6,6 +6,8 @@ import 'favorites_page.dart';
 import 'main_page.dart';
 import 'edit_profile.dart';
 import 'send_feedback.dart';
+import 'registration_manager/set_location.dart';
+import 'change_user_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'welcome_screen.dart';
@@ -101,6 +103,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+
+
   Future<void> _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
@@ -156,6 +160,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     'Edit Profile',
                     style: TextStyle(color: Colors.green),
                   ),
+                ),
+                ElevatedButton(
+                    onPressed: (){
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AskDistance()),
+                    );
+                }, child: const Text(
+                  'Change Location',
+                  style: TextStyle(color: Colors.green),
+                ),
+                ),
+                ElevatedButton(
+                  onPressed: (){
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChangeAreasPage()),
+                    );
+                  }, child: const Text(
+                  'Change Details',
+                  style: TextStyle(color: Colors.green),
+                ),
                 ),
                 const SizedBox(height: 20),
                 const Center(
