@@ -44,14 +44,17 @@ class _ChangeAreasPageState extends State<ChangeAreasPage> {
           _selectedInterests.isEmpty) {
         throw Exception('Please fill in all required fields.');
       }
-
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        DocumentSnapshot userData = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
           'firstName': _firstNameController.text,
           'lastName': _lastNameController.text,
           'birthday': _selectedDate,
           'interests': _selectedInterests,
+          'points': userData.get('points'),
+          'location' : userData.get('location'),
+          'profilePictureURL' : userData.get('profilePictureURL'),
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
