@@ -1,11 +1,26 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'profile_page.dart';
-import 'create_post/create_post.dart';
 import 'main_page.dart';
 import 'favorites_page.dart';
+import 'create_post/create_post.dart';
+import 'profile_page.dart';
 
-class RankingPage extends StatelessWidget {
-  const RankingPage({super.key});
+class RankingPage extends StatefulWidget {
+  const RankingPage({Key? key}) : super(key: key);
+
+  @override
+  _RankingPageState createState() => _RankingPageState();
+}
+
+class _RankingPageState extends State<RankingPage> {
+  Future<List<QueryDocumentSnapshot>> fetchRankedUsers() async {
+    var querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .orderBy('points', descending: true)
+        .get();
+    return querySnapshot.docs;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,36 +29,52 @@ class RankingPage extends StatelessWidget {
         title: const Text('Rankings'),
         backgroundColor: Colors.green,
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Your current ranking is: #XX',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green),
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (BuildContext context, int index) {
-                final ranking = 'Rank ${index + 1}';
-                final score = (index + 1) * 100;
+      body: FutureBuilder<List<QueryDocumentSnapshot>>(
+        future: fetchRankedUsers(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          }
+          if (!snapshot.hasData) {
+            return const Text("No data found!");
+          }
+          var currentUserRank = 1;
+          var currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
-                return ListTile(
-                  leading: CircleAvatar(
-                    child: Text((index + 1).toString()),
-                  ),
-                  title: Text(ranking),
-                  subtitle: Text('Score: $score'),
-                  trailing: const Icon(Icons.arrow_forward),
-                  onTap: () {
-                  },
-                );
-              },
-            ),
-          ),
-        ],
+          List<Widget> rankedUsers = snapshot.data!.asMap().entries.map((entry) {
+            int rank = entry.key + 1;
+            Map<String, dynamic> user = entry.value.data() as Map<String, dynamic>;
+            bool isCurrentUser = entry.value.id == currentUserUid;
+
+            if (isCurrentUser) currentUserRank = rank;
+
+            return ListTile(
+              leading: CircleAvatar(
+                child: Text(rank.toString()),
+              ),
+              title: Text('${user['firstName']} ${user['lastName']}'),
+              subtitle: Text('Points: ${user['points']}'),
+              tileColor: isCurrentUser ? Colors.lightGreen[200] : null,
+            );
+          }).toList();
+
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Your current ranking is: #$currentUserRank',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green),
+                ),
+              ),
+              Expanded(
+                child: ListView(
+                  children: rankedUsers,
+                ),
+              ),
+            ],
+          );
+        },
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.green,
