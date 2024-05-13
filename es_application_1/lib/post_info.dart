@@ -189,7 +189,40 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
     });
   }
 
+  Future<void> deletePost() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        print('User not logged in');
+        return;
+      }
 
+      // Delete the post from the 'posts' collection
+      await FirebaseFirestore.instance.collection('posts').doc(widget.activityId).delete();
+
+      // Remove any reference to this post from users' data
+      final usersQuerySnapshot = await FirebaseFirestore.instance.collection('users').get();
+      for (final userDoc in usersQuerySnapshot.docs) {
+        final userPostIds = List<String>.from(userDoc.data()['subscribed'] ?? []);
+        final userFavoriteIds = List<String>.from(userDoc.data()['favorites'] ?? []);
+
+        if (userPostIds.contains(widget.activityId)) {
+          userPostIds.remove(widget.activityId);
+          await userDoc.reference.update({'subscribed': userPostIds});
+        }
+
+        if (userFavoriteIds.contains(widget.activityId)) {
+          userFavoriteIds.remove(widget.activityId);
+          await userDoc.reference.update({'favorites': userFavoriteIds});
+        }
+
+        await userDoc.reference.update({'points': FieldValue.increment(-20)});
+      }
+      Navigator.pop(context);
+    } catch (error) {
+      print('Error deleting post: $error');
+    }
+  }
 
   String formatCoordinate(double coordinate) {
     final formattedCoordinate = coordinate.abs().toStringAsFixed(7);
@@ -366,6 +399,16 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
                           );
                         },
                         child: const Text('Confirm Participation'),
+                      ),
+                    if (FirebaseAuth.instance.currentUser?.uid == data['ownerId'])
+                      ElevatedButton(
+                        onPressed: () {
+                          deletePost();
+                        },
+                        child: const Text(
+                          'Delete Post',
+                          style: TextStyle(color: Colors.red),
+                        ),
                       ),
                   ],
                 ),

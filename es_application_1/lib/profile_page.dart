@@ -170,6 +170,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     stream: FirebaseFirestore.instance.collection('posts').where('user', isEqualTo: FirebaseAuth.instance.currentUser?.uid).snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
+                        if (snapshot.data!.docs.isEmpty) {
+                          return const Center(
+                            child: Text(
+                              'No posts were found',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          );
+                        }
                         return ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: snapshot.data!.docs.length,
@@ -229,6 +237,216 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                             );
+                          },
+                        );
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Center(
+                  child: Text(
+                    'Subscribed Posts',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(
+                  height: 150,
+                  child: StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).snapshots(),
+                    builder: (context, userSnapshot) {
+                      if (userSnapshot.hasData) {
+                        try {
+                          var subscribedPostsIds = List<String>.from(userSnapshot.data!['subscribed'] ?? []);
+                          return StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance.collection('posts').where(FieldPath.documentId, whereIn: subscribedPostsIds).snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: snapshot.data!.docs.length,
+                                  itemBuilder: (context, index) {
+                                    DocumentSnapshot post = snapshot.data!.docs[index];
+                                    return GestureDetector(
+                                      onTap: () {
+                                        // Navigate to the post page
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => ActivityDetailPage(activityId: post.id)),
+                                        );
+                                      },
+                                      child: Container(
+                                        width: 200,
+                                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                                        padding: const EdgeInsets.all(8),
+                                        color: Colors.green[100],
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                post['activityName'],
+                                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              post['description'],
+                                              maxLines: 3,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            Expanded(
+                                              child: Align(
+                                                alignment: Alignment.bottomRight,
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    const Icon(Icons.thumb_up),
+                                                    const SizedBox(width: 4),
+                                                    Text(
+                                                      (() {
+                                                        try {
+                                                          return (post['liked'] as List<dynamic>).length.toString();
+                                                        } catch (e) {
+                                                          return '0';
+                                                        }
+                                                      })(),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else {
+                                return const Center(child: CircularProgressIndicator());
+                              }
+                            },
+                          );
+                        } catch (e) {
+                          // Handle case where 'subscribed' array does not exist
+                          return const Center(
+                            child: Text(
+                              'No subscribed posts available',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          );
+                        }
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Center(
+                  child: Text(
+                    'Participated Posts',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(
+                  height: 150,
+                  child: StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).snapshots(),
+                    builder: (context, userSnapshot) {
+                      if (userSnapshot.hasData) {
+                        var participatedPostsIds;
+                        try {
+                          participatedPostsIds = List<String>.from(userSnapshot.data!['participated'] ?? []);
+                        } catch (e) {
+                          // Handle case where 'participated' array does not exist
+                          return const Center(
+                            child: Text(
+                              'No participated posts available',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          );
+                        }
+                        
+                        if (participatedPostsIds.isEmpty) {
+                          return const Center(
+                            child: Text(
+                              'No participated posts available',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          );
+                        }
+                        return StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance.collection('posts').where(FieldPath.documentId, whereIn: participatedPostsIds).snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: snapshot.data!.docs.length,
+                                itemBuilder: (context, index) {
+                                  DocumentSnapshot post = snapshot.data!.docs[index];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      // Navigate to the post page
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => ActivityDetailPage(activityId: post.id)),
+                                      );
+                                    },
+                                    child: Container(
+                                      width: 200,
+                                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                                      padding: const EdgeInsets.all(8),
+                                      color: Colors.green[100],
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              post['activityName'],
+                                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            post['description'],
+                                            maxLines: 3,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Expanded(
+                                            child: Align(
+                                              alignment: Alignment.bottomRight,
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const Icon(Icons.thumb_up),
+                                                  const SizedBox(width: 4),
+                                                  Text(
+                                                    (() {
+                                                      try {
+                                                        return (post['liked'] as List<dynamic>).length.toString();
+                                                      } catch (e) {
+                                                        return '0';
+                                                      }
+                                                    })(),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              return const Center(child: CircularProgressIndicator());
+                            }
                           },
                         );
                       } else {
