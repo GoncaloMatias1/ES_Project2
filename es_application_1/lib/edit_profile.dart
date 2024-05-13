@@ -23,7 +23,6 @@ class EditProfilePage extends StatefulWidget {
 
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  TextEditingController _usernameController = TextEditingController();
   bool _receiveEmailNotifications = true;
   bool _systemNotifications = true;
   bool _onlyNear = true;
@@ -49,7 +48,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
       _lastTimeOn = prefs.getBool('lastTimeOn') ?? true;
       _profilePicture = prefs.getBool('profilePhoto') ?? true;
       _favourites = prefs.getBool('favourites') ?? true;
-      _usernameController.text = prefs.getString('username') ?? '';
     });
   }
 
@@ -61,7 +59,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     prefs.setBool('lastTimeOn', _lastTimeOn);
     prefs.setBool('profilePhoto', _profilePicture);
     prefs.setBool('favourites', _favourites);
-    prefs.setString('username', _usernameController.text);
   }
 
   Future<void> _updateProfilePictureURL(String imageUrl) async {
@@ -141,14 +138,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ),
                     ],
                   ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _usernameController,
-                decoration: const InputDecoration(
-                  labelText: 'Username',
-                  border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 15),
