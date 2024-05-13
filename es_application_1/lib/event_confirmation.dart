@@ -60,12 +60,34 @@ class EventConfirmationPage extends StatelessWidget {
                       'onTime': value,
                     });
 
-                    // Update user points
-                    int pointsToAdd = value ? 10 : 5;
-                    FirebaseFirestore.instance.collection('users').doc(userId).set(
-                      {'points': FieldValue.increment(pointsToAdd)},
-                      SetOptions(merge: true),
-                    );
+                    DocumentReference userDocRef = FirebaseFirestore.instance.collection('users').doc(userId);
+                    var userData = await userDocRef.get();
+                    if (userData.exists) {
+                      Map<String, dynamic>? userDataMap = userData.data() as Map<String, dynamic>?; // Explicit cast
+
+                      if (userDataMap != null) {
+                        /// Add to the participated
+                        List<String> participatedPosts = List<String>.from(userDataMap['participated'] ?? []);
+                        participatedPosts.add(postId);
+
+                        /// Remove from the subscribed
+                        List<String> subscribedPosts = List<String>.from(userDataMap['subscribed'] ?? []);
+                        subscribedPosts.remove(postId);
+
+                        // Calculate points to add
+                        int pointsToAdd = value ? 10 : 5;
+
+                        // Update both 'participated' and 'points' fields
+                        await userDocRef.set(
+                          {
+                            'participated': participatedPosts,
+                            'subscribed': subscribedPosts,
+                            'points': FieldValue.increment(pointsToAdd),
+                          },
+                          SetOptions(merge: true),
+                        );
+                      }
+                    }
 
                     Navigator.of(context).pop(); // Close the dialog
                   },
