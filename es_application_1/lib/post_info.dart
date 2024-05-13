@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'event_confirmation.dart';
+import 'comments.dart';
 
 /// Tests Done
 
@@ -388,6 +389,17 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
                           icon: Icon(data['isFavorite'] ? Icons.favorite : Icons.favorite_border, color: data['isFavorite'] ? Colors.red : null),
                           onPressed: () {
                             handleFavoriteButtonPress(widget.activityId, data['isFavorite']);
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.comment, color: null),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CommentScreen(postId: widget.activityId),
+                              ),
+                            );
                           },
                         ),
                         GestureDetector(
