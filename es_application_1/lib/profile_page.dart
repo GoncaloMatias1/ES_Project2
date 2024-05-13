@@ -19,14 +19,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  TextEditingController _usernameController = TextEditingController();
   bool receiveEmailNotifications = true;
   bool systemNotifications = true;
   bool onlyNear = true;
   bool lastTimeOn = true;
   bool profilePicture = true;
   bool favourites = true;
-  String _username = "YourUsername";
+  String _name = "";
   String _profilePictureURL = "";
 
   @override
@@ -34,6 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     loadSettings();
     loadProfilePicture();
+    loadProfileName();
   }
 
   Future<void> loadSettings() async {
@@ -45,9 +45,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
       lastTimeOn = prefs.getBool('lastTimeOn') ?? true;
       profilePicture = prefs.getBool('profilePhoto') ?? true;
       favourites = prefs.getBool('favourites') ?? true;
-      _username = prefs.getString('username') ?? "YourUsername";
-      _usernameController.text = _username;
     });
+  }
+
+  Future<void> loadProfileName() async{
+    try {
+      String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+      DocumentSnapshot<Map<String, dynamic>> userSnapshot = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      String fname = userSnapshot.data()?['firstName'];
+      String lname = userSnapshot.data()?['lastName'];
+      setState(() {
+        _name = fname + " " + lname;
+      });
+    }catch(e){
+
+    }
   }
 
   Future<void> loadProfilePicture() async {
@@ -144,7 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  _username,
+                  _name,
                   style: const TextStyle(fontSize: 18, color: Colors.green),
                 ),
                 ElevatedButton(
