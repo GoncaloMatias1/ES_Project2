@@ -170,7 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     );
                   },
                   child: const Text(
-                    'Edit Profile',
+                    'Preferences',
                     style: TextStyle(color: Colors.green),
                   ),
                 ),
@@ -194,7 +194,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           builder: (context) => ChangeAreasPage()),
                     );
                   }, child: const Text(
-                  'Change Details',
+                  'Edit Profile',
                   style: TextStyle(color: Colors.green),
                 ),
                 ),
