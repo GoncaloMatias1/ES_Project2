@@ -22,17 +22,17 @@ class MyApp extends StatelessWidget {
   final String? storedEmail;
   final String? storedPassword;
 
-  const MyApp({Key? key, this.storedEmail, this.storedPassword}) : super(key: key);
+  const MyApp({super.key, this.storedEmail, this.storedPassword});
 
   @override
   Widget build(BuildContext context) {
-    Widget _initialScreen;
+    Widget initialScreen;
 
     final isLoggedIn = storedEmail != null && storedPassword != null;
 
     if (isLoggedIn) {
       // Check if the stored credentials are valid
-      _initialScreen = FutureBuilder(
+      initialScreen = FutureBuilder(
         future: FirebaseAuth.instance.signInWithEmailAndPassword(
           email: storedEmail!,
           password: storedPassword!,
@@ -55,12 +55,12 @@ class MyApp extends StatelessWidget {
       final seenOnboarding = SharedPreferences.getInstance()
           .then((prefs) => prefs.getBool('seenOnboarding') ?? false);
 
-      _initialScreen = FutureBuilder<bool>(
+      initialScreen = FutureBuilder<bool>(
         future: seenOnboarding,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.data == false) {
-              return OnboardingScreen();
+              return const OnboardingScreen();
             } else {
               return const WelcomeScreen();
             }
@@ -80,7 +80,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: _initialScreen,
+      home: initialScreen,
     );
   }
 }

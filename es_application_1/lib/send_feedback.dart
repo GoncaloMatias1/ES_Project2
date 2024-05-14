@@ -3,7 +3,6 @@ import 'package:es_application_1/ranking_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'create_post/create_post.dart';
 import 'favorites_page.dart';
 import 'main_page.dart';
@@ -11,7 +10,7 @@ import 'dart:async';
 
 
 class FeedbackScreen extends StatefulWidget {
-  const FeedbackScreen({Key? key}) : super(key: key);
+  const FeedbackScreen({super.key});
 
   @override
   _FeedbackScreenState createState() => _FeedbackScreenState();
@@ -41,7 +40,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
           await Future.delayed(const Duration(seconds: 2));
           Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => ProfileScreen()),
+                      MaterialPageRoute(builder: (context) => const ProfileScreen()),
                     );
         }
       } catch (e) {
@@ -106,7 +105,6 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 const SizedBox(height: 32.0),
                 ElevatedButton(
                   onPressed: _sendFeedback,
-                  child: const Text('Send Feedback'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green[800],
                     foregroundColor: Colors.white,
@@ -116,6 +114,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                   ),
+                  child: const Text('Send Feedback'),
                 ),
               ],
             ),
@@ -156,7 +155,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => FavoritesPage()),
+                    MaterialPageRoute(builder: (context) => const FavoritesPage()),
                   );
                 },
                 child: Container(

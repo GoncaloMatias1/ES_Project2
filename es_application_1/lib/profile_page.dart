@@ -14,6 +14,8 @@ import 'welcome_screen.dart';
 import 'post_info.dart';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -56,7 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       String fname = userSnapshot.data()?['firstName'];
       String lname = userSnapshot.data()?['lastName'];
       setState(() {
-        _name = fname + " " + lname;
+        _name = "$fname $lname";
       });
     }catch(e){
 
@@ -179,7 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => AskDistance()),
+                            builder: (context) => const AskDistance()),
                     );
                 }, child: const Text(
                   'Change Location',
@@ -191,7 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ChangeAreasPage()),
+                          builder: (context) => const ChangeAreasPage()),
                     );
                   }, child: const Text(
                   'Edit Profile',
@@ -399,7 +401,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     stream: FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).snapshots(),
                     builder: (context, userSnapshot) {
                       if (userSnapshot.hasData) {
-                        var participatedPostsIds;
+                        List<String> participatedPostsIds;
                         try {
                           participatedPostsIds = List<String>.from(userSnapshot.data!['participated'] ?? []);
                         } catch (e) {
@@ -616,7 +618,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => FavoritesPage()),
+                      MaterialPageRoute(builder: (context) => const FavoritesPage()),
                     );
                   },
                   child: Container(

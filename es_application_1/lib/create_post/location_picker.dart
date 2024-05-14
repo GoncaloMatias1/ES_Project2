@@ -7,7 +7,7 @@ import 'package:geolocator/geolocator.dart';
 class LocationPicker extends StatefulWidget {
   final Function(LatLng)? onLocationSelected;
 
-  LocationPicker({Key? key, this.onLocationSelected}) : super(key: key);
+  const LocationPicker({super.key, this.onLocationSelected});
 
   @override
   LocationPickerState createState() => LocationPickerState();

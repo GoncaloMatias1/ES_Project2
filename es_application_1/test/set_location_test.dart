@@ -9,7 +9,7 @@ class MockGeolocator extends Mock implements GeolocatorPlatform {}
 
 void main() {
   testWidgets('Widget displays correctly', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
+    await tester.pumpWidget(const MaterialApp(
       home: AskDistance(),
     ));
 

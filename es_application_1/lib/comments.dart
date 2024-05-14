@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class CommentScreen extends StatefulWidget {
   @override
   final String postId;
-  CommentScreen({required this.postId});
+  const CommentScreen({super.key, required this.postId});
+  @override
   _CommentScreenState createState() => _CommentScreenState();
 }
 
@@ -29,7 +29,7 @@ class _CommentScreenState extends State<CommentScreen> {
       DocumentSnapshot<Map<String, dynamic>> userSnapshot = await FirebaseFirestore.instance.collection('users').doc(uid).get();
       String fname = userSnapshot.data()?['firstName'] ?? '';
       String lname = userSnapshot.data()?['lastName'] ?? '';
-      _name = fname + " " + lname;
+      _name = "$fname $lname";
     } catch (e) {
       // Handle errors
     }
@@ -101,7 +101,7 @@ class _CommentScreenState extends State<CommentScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -109,8 +109,9 @@ class _CommentScreenState extends State<CommentScreen> {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
-    TextEditingController _commentController = TextEditingController();
+    TextEditingController commentController = TextEditingController();
 
     return Scaffold(
         appBar: AppBar(
@@ -124,7 +125,7 @@ class _CommentScreenState extends State<CommentScreen> {
               stream: FirebaseFirestore.instance.collection('posts').doc(widget.postId).collection('comments').orderBy('timestamp').snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 }
@@ -144,8 +145,8 @@ class _CommentScreenState extends State<CommentScreen> {
                     final formattedTimestamp = timestamp != null ? DateFormat('yyyy-MM-dd HH:mm').format(timestamp.toDate()) : 'No timestamp';
 
                     return Container(
-                      margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                      padding: EdgeInsets.all(10.0),
+                      margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                      padding: const EdgeInsets.all(10.0),
                       decoration: BoxDecoration(
                         color: Colors.grey[200],
                         borderRadius: BorderRadius.circular(10.0),
@@ -155,13 +156,13 @@ class _CommentScreenState extends State<CommentScreen> {
                         subtitle: Row(
                           children: [
                             Text(commentUser ?? 'Unknown user',
-                              style: TextStyle(color: Colors.grey),
+                              style: const TextStyle(color: Colors.grey),
                             ),
-                            Text(' · ',
+                            const Text(' · ',
                             style: TextStyle(color: Colors.grey),
                             ),
                             Text(formattedTimestamp ?? 'No time',
-                              style: TextStyle(color: Colors.grey),
+                              style: const TextStyle(color: Colors.grey),
                             ),
                           ],
                         ),
@@ -176,8 +177,8 @@ class _CommentScreenState extends State<CommentScreen> {
             children: [
               Expanded(
                 child: TextField(
-                  controller: _commentController,
-                  decoration: InputDecoration(
+                  controller: commentController,
+                  decoration: const InputDecoration(
                     hintText: 'Enter your comment',
                     contentPadding: EdgeInsets.all(16.0),
                   ),
@@ -185,15 +186,15 @@ class _CommentScreenState extends State<CommentScreen> {
               ),
               IconButton(
                 onPressed: () {
-                  String comment = _commentController.text;
+                  String comment = commentController.text;
                     _submitComment(comment);
-                    _commentController.clear();
+                    commentController.clear();
                 },
-                icon: Icon(Icons.send_sharp, size: 30, color: Colors.green),
+                icon: const Icon(Icons.send_sharp, size: 30, color: Colors.green),
               ),
             ],
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
         ],
       ),
     );

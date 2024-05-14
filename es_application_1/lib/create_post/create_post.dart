@@ -8,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 /// Some tests done
 
 class CreatePostScreen extends StatefulWidget {
-  const CreatePostScreen({Key? key}) : super(key: key);
+  const CreatePostScreen({super.key});
 
   @override
   CreatePostScreenState createState() => CreatePostScreenState();

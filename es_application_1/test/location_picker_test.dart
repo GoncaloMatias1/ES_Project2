@@ -17,7 +17,7 @@ void main() {
     });
     group('LocationPicker', () {
       testWidgets('widget test', (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(
+        await tester.pumpWidget(const MaterialApp(
           home: LocationPicker(),
         ));
 

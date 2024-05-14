@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class EventConfirmationPage extends StatelessWidget {
   final String postId;
 
-  EventConfirmationPage({required this.postId});
+  const EventConfirmationPage({super.key, required this.postId});
 
   // Function to handle updating participation status
   void updateParticipationStatus(BuildContext context, String userId, bool value) {
