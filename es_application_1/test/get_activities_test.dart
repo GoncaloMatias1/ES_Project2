@@ -77,20 +77,20 @@ void main() {
       await fakeFirestore.collection('users').doc(user.uid).set({
         'interests': ['Music', 'Movies'],
         'distance': 10.0, // Convert to double
-        'location': GeoPoint(52.520008, 13.404954), // Berlin coordinates
+        'location': const GeoPoint(52.520008, 13.404954), // Berlin coordinates
       });
 
       // Mock activity data
       await fakeFirestore.collection('posts').doc('activity1').set({
         'categories': ['Music', 'Sports'],
         'user': 'anotherUser',
-        'location': GeoPoint(52.520008, 13.404954), // Berlin coordinates
+        'location': const GeoPoint(52.520008, 13.404954), // Berlin coordinates
       });
 
       await fakeFirestore.collection('posts').doc('activity2').set({
         'categories': ['Outdoors'],
         'user': 'anotherUser',
-        'location': GeoPoint(48.856613, 2.352222), // Paris coordinates
+        'location': const GeoPoint(48.856613, 2.352222), // Paris coordinates
       });
 
       final manager = ActivityManager(fakeFirestore, user);

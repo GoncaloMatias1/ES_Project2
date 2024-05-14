@@ -8,6 +8,8 @@ import 'ranking_page.dart';
 import 'post_info.dart';
 
 class FavoritesPage extends StatefulWidget {
+  const FavoritesPage({super.key});
+
   @override
   _FavoritesPageState createState() => _FavoritesPageState();
 }
@@ -66,12 +68,12 @@ class _FavoritesPageState extends State<FavoritesPage> {
         itemBuilder: (context, index) {
           Map<String, dynamic> postData = favoritePosts[index].data() as Map<String, dynamic>;
           return Card(
-            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             child: ListTile(
               title: Text(postData['activityName'] ?? 'No title available'),
               subtitle: Text(postData['description'] ?? 'No description available'),
               trailing: IconButton(
-                icon: Icon(Icons.remove_circle_outline, color: Colors.red),
+                icon: const Icon(Icons.remove_circle_outline, color: Colors.red),
                 onPressed: () => removeFavorite(favoritePosts[index].id),
               ),
               onTap: () {
@@ -132,7 +134,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => ProfileScreen()),
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
               );
             },
           ),

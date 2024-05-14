@@ -7,7 +7,7 @@ import 'create_post/create_post.dart';
 import 'profile_page.dart';
 
 class RankingPage extends StatefulWidget {
-  const RankingPage({Key? key}) : super(key: key);
+  const RankingPage({super.key});
 
   @override
   _RankingPageState createState() => _RankingPageState();
@@ -64,7 +64,7 @@ class _RankingPageState extends State<RankingPage> {
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
                   'Your current ranking is: #$currentUserRank',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green),
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green),
                 ),
               ),
               Expanded(
@@ -110,7 +110,7 @@ class _RankingPageState extends State<RankingPage> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => FavoritesPage()),
+                    MaterialPageRoute(builder: (context) => const FavoritesPage()),
                   );
                 },
                 child: Container(
@@ -156,7 +156,7 @@ class _RankingPageState extends State<RankingPage> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => ProfileScreen()),
+                    MaterialPageRoute(builder: (context) => const ProfileScreen()),
                   );
                 },
                 child: Container(

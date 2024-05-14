@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 
 class ChangeAreasPage extends StatefulWidget {
+  const ChangeAreasPage({super.key});
+
   @override
   _ChangeAreasPageState createState() => _ChangeAreasPageState();
 }
@@ -64,7 +66,7 @@ class _ChangeAreasPageState extends State<ChangeAreasPage> {
         );
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => ProfileScreen()),
+          MaterialPageRoute(builder: (context) => const ProfileScreen()),
         );
 
       } else {
@@ -153,12 +155,12 @@ class _ChangeAreasPageState extends State<ChangeAreasPage> {
                   onPressed: () => _submitPersonalData(context),
                   child: const Text('Submit'),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => ProfileScreen())
+                    MaterialPageRoute(builder: (context) => const ProfileScreen())
                     );
                   },
                   child: const Text('Cancel',

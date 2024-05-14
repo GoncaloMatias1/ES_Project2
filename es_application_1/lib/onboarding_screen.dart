@@ -3,6 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'welcome_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({super.key});
+
   @override
   _OnboardingScreenState createState() => _OnboardingScreenState();
 }
@@ -85,11 +87,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   curve: Curves.linear,
                 );
               },
-              child: const Text('Next'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green[800],
                 foregroundColor: Colors.white,
               ),
+              child: const Text('Next'),
             )
                 : ElevatedButton(
               onPressed: () async {
@@ -98,11 +100,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   MaterialPageRoute(builder: (_) => const WelcomeScreen()),
                 );
               },
-              child: const Text('Get Started'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green[800],
                 foregroundColor: Colors.white,
               ),
+              child: const Text('Get Started'),
             ),
           ],
         ),
