@@ -4,7 +4,7 @@ import 'authentication/register_screen.dart';
 import 'authentication/login_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({Key? key}) : super(key: key);
+  const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,26 +41,26 @@ class WelcomeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RegisterScreen()));
               },
-              child: const Text('Create Account'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green[800],
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 textStyle: const TextStyle(fontSize: 20),
               ),
+              child: const Text('Create Account'),
             ),
             const SizedBox(height: 24.0),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LoginScreen()));
               },
-              child: const Text('I already have an account'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.green[800],
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 textStyle: const TextStyle(fontSize: 20),
               ),
+              child: const Text('I already have an account'),
             ),
           ],
         ),

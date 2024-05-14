@@ -14,7 +14,7 @@ import 'get_activities/get_activities.dart';
 import 'post_info.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  const MainPage({super.key});
 
   @override
   _MainPageState createState() => _MainPageState();
@@ -59,7 +59,7 @@ class _MainPageState extends State<MainPage> {
               userData.data()!.containsKey('location'))) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => PersonalDataPage()),
+          MaterialPageRoute(builder: (context) => const PersonalDataPage()),
         );
       } else {
         _maybeShowSustainabilityTip();
@@ -251,7 +251,7 @@ class _MainPageState extends State<MainPage> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => FavoritesPage()),
+                    MaterialPageRoute(builder: (context) => const FavoritesPage()),
                   );
                 },
                 child: Container(
@@ -320,7 +320,7 @@ class _MainPageState extends State<MainPage> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => ProfileScreen()),
+                    MaterialPageRoute(builder: (context) => const ProfileScreen()),
                   );
                 },
                 child: Container(

@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'set_location.dart';
 
 class PersonalDataPage extends StatefulWidget {
+  const PersonalDataPage({super.key});
+
   @override
   _PersonalDataPageState createState() => _PersonalDataPageState();
 }
@@ -62,7 +64,7 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => AskDistance()),
+          MaterialPageRoute(builder: (context) => const AskDistance()),
         );
       } else {
         throw Exception('User not found.');

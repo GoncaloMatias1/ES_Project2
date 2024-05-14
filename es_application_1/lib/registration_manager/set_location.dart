@@ -6,6 +6,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../main_page.dart';
 
 class AskDistance extends StatefulWidget {
+  const AskDistance({super.key});
+
   @override
   _AskDistanceState createState() => _AskDistanceState();
 }
@@ -15,7 +17,7 @@ class _AskDistanceState extends State<AskDistance> {
   final TextEditingController _distanceController = TextEditingController();
   double _sliderValue = 5;
   GoogleMapController? _mapController;
-  Set<Marker> _markers = {};
+  final Set<Marker> _markers = {};
   Position? _currentLocation;
   LatLng? _selectedLocation;
 

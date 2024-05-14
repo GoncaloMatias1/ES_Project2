@@ -31,7 +31,7 @@ void main() {
 
   testWidgets('ProfileScreen has a title and shows profile information', (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp(
+      const MaterialApp(
         home: ProfileScreen(),
       ),
     );
