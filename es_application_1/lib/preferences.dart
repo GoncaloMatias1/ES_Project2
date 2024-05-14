@@ -23,12 +23,12 @@ class EditProfilePage extends StatefulWidget {
 
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  bool _receiveEmailNotifications = true;
-  bool _systemNotifications = true;
-  bool _onlyNear = true;
-  bool _lastTimeOn = true;
-  bool _profilePicture = true;
-  bool _favourites = true;
+  bool _receiveEmailNotificationsLocal = true;
+  bool _systemNotificationsLocal = true;
+  bool _onlyNearLocal = true;
+  bool _lastTimeOnLocal = true;
+  bool _profilePictureLocal = true;
+  bool _favouritesLocal = true;
   String? _imageUrl;
 
   @override
@@ -41,24 +41,24 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Future<void> loadSettings() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _receiveEmailNotifications =
+      _receiveEmailNotificationsLocal =
           prefs.getBool('receiveEmailNotifications') ?? true;
-      _systemNotifications = prefs.getBool('systemNotifications') ?? true;
-      _onlyNear = prefs.getBool('onlyNear') ?? true;
-      _lastTimeOn = prefs.getBool('lastTimeOn') ?? true;
-      _profilePicture = prefs.getBool('profilePhoto') ?? true;
-      _favourites = prefs.getBool('favourites') ?? true;
+      _systemNotificationsLocal = prefs.getBool('systemNotifications') ?? true;
+      _onlyNearLocal = prefs.getBool('onlyNear') ?? true;
+      _lastTimeOnLocal = prefs.getBool('lastTimeOn') ?? true;
+      _profilePictureLocal = prefs.getBool('profilePhoto') ?? true;
+      _favouritesLocal = prefs.getBool('favourites') ?? true;
     });
   }
 
   Future<void> saveSettings() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('receiveEmailNotifications', _receiveEmailNotifications);
-    prefs.setBool('systemNotifications', _systemNotifications);
-    prefs.setBool('onlyNear', _onlyNear);
-    prefs.setBool('lastTimeOn', _lastTimeOn);
-    prefs.setBool('profilePhoto', _profilePicture);
-    prefs.setBool('favourites', _favourites);
+    prefs.setBool('receiveEmailNotifications', _receiveEmailNotificationsLocal);
+    prefs.setBool('systemNotifications', _systemNotificationsLocal);
+    prefs.setBool('onlyNear', _onlyNearLocal);
+    prefs.setBool('lastTimeOn', _lastTimeOnLocal);
+    prefs.setBool('profilePhoto', _profilePictureLocal);
+    prefs.setBool('favourites', _favouritesLocal);
   }
 
   Future<void> _updateProfilePictureURL(String imageUrl) async {
@@ -102,7 +102,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Profile'),
+        title: const Text('Preferences'),
         backgroundColor: Colors.green,
       ),
       body: SingleChildScrollView(
@@ -147,44 +147,40 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
               SwitchListTile(
                 title: const Text('Receive Email Notifications'),
-                value: _receiveEmailNotifications,
+                value: _receiveEmailNotificationsLocal,
                 onChanged: (value) {
                   setState(() {
-                    _receiveEmailNotifications = value;
-                    saveSettings();
+                    _receiveEmailNotificationsLocal = value;
                   });
                 },
                 activeColor: Colors.green,
               ),
               SwitchListTile(
                 title: const Text('System Notifications'),
-                value: _systemNotifications,
+                value: _systemNotificationsLocal,
                 onChanged: (value) {
                   setState(() {
-                    _systemNotifications = value;
-                    saveSettings();
+                    _systemNotificationsLocal = value;
                   });
                 },
                 activeColor: Colors.green,
               ),
               SwitchListTile(
                 title: const Text('Only Near Activities'),
-                value: _onlyNear,
+                value: _onlyNearLocal,
                 onChanged: (value) {
                   setState(() {
-                    _onlyNear = value;
-                    saveSettings();
+                    _onlyNearLocal = value;
                   });
                 },
                 activeColor: Colors.green,
               ),
               SwitchListTile(
                 title: const Text('Last Time On'),
-                value: _lastTimeOn,
+                value: _lastTimeOnLocal,
                 onChanged: (value) {
                   setState(() {
-                    _lastTimeOn = value;
-                    saveSettings();
+                    _lastTimeOnLocal = value;
                   });
                 },
                 activeColor: Colors.green,
@@ -196,22 +192,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
               SwitchListTile(
                 title: const Text('Profile Picture'),
-                value: _profilePicture,
+                value: _profilePictureLocal,
                 onChanged: (value) {
                   setState(() {
-                    _profilePicture = value;
-                    saveSettings();
+                    _profilePictureLocal = value;
                   });
                 },
                 activeColor: Colors.green,
               ),
               SwitchListTile(
                 title: const Text('My Favourites'),
-                value: _favourites,
+                value: _favouritesLocal,
                 onChanged: (value) {
                   setState(() {
-                    _favourites = value;
-                    saveSettings();
+                    _favouritesLocal = value;
                   });
                 },
                 activeColor: Colors.green,
@@ -230,6 +224,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green[800],
                       foregroundColor: Colors.white),
+                ),
+              ),
+              Center(
+                child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => ProfileScreen())
+                  );
+                },
+                  child: const Text('Cancel Changes',
+                      style: TextStyle(color: Colors.red)),
                 ),
               ),
             ],

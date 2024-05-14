@@ -54,7 +54,6 @@ class _ChangeAreasPageState extends State<ChangeAreasPage> {
           'interests': _selectedInterests,
           'points': userData.get('points'),
           'location' : userData.get('location'),
-          'profilePictureURL' : userData.get('profilePictureURL'),
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -148,10 +147,25 @@ class _ChangeAreasPageState extends State<ChangeAreasPage> {
               children: _categories.map((category) => _buildInterestChip(category)).toList(),
             ),
             const SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: () => _submitPersonalData(context),
-              child: const Text('Submit'),
-            ),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () => _submitPersonalData(context),
+                  child: const Text('Submit'),
+                ),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfileScreen())
+                    );
+                  },
+                  child: const Text('Cancel',
+                    style: TextStyle(color: Colors.red)),
+                ),
+              ],
+            )
           ],
         ),
       ),

@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'create_post/create_post.dart';
 import 'favorites_page.dart';
 import 'main_page.dart';
-import 'edit_profile.dart';
+import 'preferences.dart';
 import 'send_feedback.dart';
 import 'registration_manager/set_location.dart';
-import 'change_user_data.dart';
+import 'change_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'welcome_screen.dart';
@@ -170,7 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     );
                   },
                   child: const Text(
-                    'Edit Profile',
+                    'Preferences',
                     style: TextStyle(color: Colors.green),
                   ),
                 ),
@@ -194,7 +194,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           builder: (context) => ChangeAreasPage()),
                     );
                   }, child: const Text(
-                  'Change Details',
+                  'Edit Profile',
                   style: TextStyle(color: Colors.green),
                 ),
                 ),
