@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -15,11 +14,80 @@ class _CommentScreenState extends State<CommentScreen> {
 
   User? user = FirebaseAuth.instance.currentUser;
   String _name = "";
+  Map<String, bool> _showReplyField = {};
+  Map<String, TextEditingController?> _replyControllers = {};
 
   @override
   void initState() {
     super.initState();
     loadProfileName();
+    FirebaseFirestore.instance.collection('posts').doc(widget.postId).collection('comments').get().then((querySnapshot) {
+      querySnapshot.docs.forEach((comment) {
+        _replyControllers[comment.id] = TextEditingController();
+      });
+    });
+  }
+
+  Widget _buildReplies(String commentId) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('posts').doc(widget.postId).collection('comments').doc(commentId).collection('replies').orderBy('timestamp').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        }
+        final replies = snapshot.data?.docs ?? [];
+        return Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: replies.map<Widget>((replyDoc) {
+              final replyData = replyDoc.data() as Map<String, dynamic>?;
+              final replyUser = replyData?['user'] as String?;
+              final replyText = replyData?['reply'] as String?;
+              final timestamp = replyData?['timestamp'] as Timestamp?;
+              final formattedTimestamp = timestamp != null ? DateFormat('yyyy-MM-dd HH:mm').format(timestamp.toDate()) : 'No timestamp';
+
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        replyText ?? 'No reply',
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                      SizedBox(height: 4.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            replyUser ?? 'Unknown user',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          Text(
+                            formattedTimestamp ?? 'No time',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      Divider(),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
   }
 
   Future<void> loadProfileName() async {
@@ -30,6 +98,26 @@ class _CommentScreenState extends State<CommentScreen> {
       String fname = userSnapshot.data()?['firstName'] ?? '';
       String lname = userSnapshot.data()?['lastName'] ?? '';
       _name = fname + " " + lname;
+    } catch (e) {
+      // Handle errors
+    }
+  }
+
+  Future<void> _submitReply(String commentId, String reply) async {
+    try {
+      if (reply.isNotEmpty) {
+        await FirebaseFirestore.instance.collection('posts').doc(widget.postId).collection('comments').doc(commentId).collection('replies').add({
+          'reply': reply,
+          'timestamp': Timestamp.now(),
+          'user': _name,
+        });
+        _showDialog('Reply posted successfully!');
+        setState(() {
+          _showReplyField[commentId] = false;
+        });
+      } else {
+        _showDialog('Reply cannot be empty!');
+      }
     } catch (e) {
       // Handle errors
     }
@@ -51,44 +139,6 @@ class _CommentScreenState extends State<CommentScreen> {
       // Handle errors
     }
   }
-
-  /*
-  Future<void> handleLikeButtonPress(String postId, bool isLiked) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
-      final userData = await userRef.get();
-      if (userData.exists) {
-        List<dynamic> likedActivities = userData.data()?['liked'] as List<dynamic>? ?? [];
-
-        if (isLiked) {
-          likedActivities.remove(postId);
-        } else {
-          likedActivities.add(postId);
-        }
-        await userRef.update({'liked': likedActivities});
-
-        // Update liked field in 'posts' collection
-        final postRef = FirebaseFirestore.instance.collection('posts').doc(postId);
-        final postData = await postRef.get();
-        if (postData.exists) {
-          List<dynamic> postLikedBy = postData.data()?['liked'] as List<dynamic>? ?? [];
-
-          if (isLiked) {
-            postLikedBy.remove(user.uid);
-          } else {
-            postLikedBy.add(user.uid);
-          }
-
-          await postRef.update({'liked': postLikedBy});
-        }
-      }
-    }
-    setState(() {
-      isLiked = !isLiked;
-    });
-  }
-*/
 
   void _showDialog(String message) {
     showDialog(
@@ -138,34 +188,73 @@ class _CommentScreenState extends State<CommentScreen> {
                   itemCount: comments.length,
                   itemBuilder: (context, index) {
                     final commentData = comments[index].data() as Map<String, dynamic>?;
+                    final commentId = comments[index].id;
                     final commentUser = commentData?['user'] as String?;
                     final commentText = commentData?['comment'] as String?;
                     final timestamp = commentData?['timestamp'] as Timestamp?;
                     final formattedTimestamp = timestamp != null ? DateFormat('yyyy-MM-dd HH:mm').format(timestamp.toDate()) : 'No timestamp';
 
-                    return Container(
-                      margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                      padding: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: ListTile(
-                        title: Text(commentText ?? 'No comment'),
-                        subtitle: Row(
-                          children: [
-                            Text(commentUser ?? 'Unknown user',
-                              style: TextStyle(color: Colors.grey),
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                          padding: EdgeInsets.all(10.0),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: ListTile(
+                            title: Text(commentText ?? 'No comment'),
+                            subtitle: Row(
+                              children: [
+                                Text(commentUser ?? 'Unknown user',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                                Text(' · ',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                                Text(formattedTimestamp ?? 'No time',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ],
                             ),
-                            Text(' · ',
-                            style: TextStyle(color: Colors.grey),
+                            trailing: TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  _showReplyField[commentId] = true;
+                                });
+                              },
+                              child: Text('Reply'),
                             ),
-                            Text(formattedTimestamp ?? 'No time',
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
+                        if (_showReplyField[commentId] ?? false)
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    controller: _replyControllers[commentId],
+                                    decoration: InputDecoration(
+                                      hintText: 'Enter your reply',
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    String reply = _replyControllers[commentId]?.text ?? '';
+                                    _submitReply(commentId, reply);
+                                    _replyControllers[commentId]?.clear();
+                                  },
+                                  icon: Icon(Icons.send),
+                                ),
+                              ],
+                            ),
+                          ),
+                        _buildReplies(commentId),
+                      ],
                     );
                   },
                 );
