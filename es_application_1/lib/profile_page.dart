@@ -6,7 +6,7 @@ import 'favorites_page.dart';
 import 'main_page.dart';
 import 'preferences.dart';
 import 'send_feedback.dart';
-import 'registration_manager/set_location.dart';
+import 'change_location.dart';
 import 'change_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -179,7 +179,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => AskDistance()),
+                            builder: (context) => ChangeLocation()),
                     );
                 }, child: const Text(
                   'Change Location',
