@@ -130,7 +130,7 @@ class _ChangeLocationState extends State<ChangeLocation> {
 
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const MainPage()),
+              MaterialPageRoute(builder: (context) => const ProfileScreen()),
             );
           } catch (e) {
             print('Error storing data: $e');
