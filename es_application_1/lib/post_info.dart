@@ -11,7 +11,7 @@ import 'comments.dart';
 class ActivityDetailPage extends StatefulWidget {
   final String activityId;
 
-  const ActivityDetailPage({Key? key, required this.activityId}) : super(key: key);
+  const ActivityDetailPage({super.key, required this.activityId});
 
   @override
   ActivityDetailPageState createState() => ActivityDetailPageState();
@@ -331,7 +331,7 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
                             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green[900]),
                           ),
                           const SizedBox(height: 4),
-                          Container(
+                          SizedBox(
                             height: 150,
                             child: GoogleMap(
                               initialCameraPosition: CameraPosition(
@@ -392,7 +392,7 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
                           },
                         ),
                         IconButton(
-                          icon: Icon(Icons.comment, color: null),
+                          icon: const Icon(Icons.comment, color: null),
                           onPressed: () {
                             Navigator.push(
                               context,

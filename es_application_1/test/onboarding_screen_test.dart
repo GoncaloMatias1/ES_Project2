@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../lib/onboarding_screen.dart';
-import '../lib/welcome_screen.dart';
+import 'package:es_application_1/onboarding_screen.dart';
+import 'package:es_application_1/welcome_screen.dart';
 
 class MockSharedPreferences extends Mock implements SharedPreferences {}
 
 void main() {
   testWidgets('Widget displays correctly', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
+    await tester.pumpWidget(const MaterialApp(
       home: OnboardingScreen(),
     ));
 
@@ -21,7 +21,7 @@ void main() {
   });
 
   testWidgets('Next button navigates to next page', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
+    await tester.pumpWidget(const MaterialApp(
       home: OnboardingScreen(),
     ));
 
@@ -39,7 +39,7 @@ void main() {
 
     when(mockSharedPreferences.setBool('seenOnboarding', true)).thenAnswer((_) => Future.value(true));
 
-    await tester.pumpWidget(MaterialApp(
+    await tester.pumpWidget(const MaterialApp(
       home: OnboardingScreen(),
     ));
 

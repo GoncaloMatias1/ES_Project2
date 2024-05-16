@@ -8,7 +8,7 @@ void main() {
     final mockFirebaseAuth = MockFirebaseAuth();
 
     testWidgets('Email and password fields are present and can be entered', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: RegisterScreen()));
+      await tester.pumpWidget(const MaterialApp(home: RegisterScreen()));
 
       expect(find.byType(TextFormField), findsNWidgets(2)); // Verifica a presença de dois campos de texto.
 
@@ -21,7 +21,7 @@ void main() {
     });
 
     testWidgets('Register button attempts to create a new user', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: RegisterScreen()));
+      await tester.pumpWidget(const MaterialApp(home: RegisterScreen()));
 
       // Entra com algum texto nos campos de e-mail e senha.
       await tester.enterText(find.byType(TextFormField).at(0), 'newuser@example.com');

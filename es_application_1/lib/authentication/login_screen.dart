@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../main_page.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -181,7 +181,6 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 32.0),
               ElevatedButton(
                 onPressed: _loginUser,
-                child: const Text('Login'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green[800],
                   foregroundColor: Colors.white,
@@ -191,13 +190,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
+                child: const Text('Login'),
               ),
               TextButton(
                 onPressed: _forgotPassword,
-                child: const Text('Forgot Password?'),
                 style: TextButton.styleFrom(
                   textStyle: const TextStyle(fontSize: 16),
                 ),
+                child: const Text('Forgot Password?'),
               ),
             ],
           ),

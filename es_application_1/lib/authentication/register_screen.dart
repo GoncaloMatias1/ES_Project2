@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../registration_manager/user_info.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  const RegisterScreen({super.key});
 
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
@@ -60,7 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => PersonalDataPage()),
+      MaterialPageRoute(builder: (context) => const PersonalDataPage()),
     );
     
   } catch (e) {
@@ -146,7 +146,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Center(
                 child: ElevatedButton(
                   onPressed: _registerUser,
-                  child: const Text('Register'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green[800],
                     foregroundColor: Colors.white,
@@ -159,6 +158,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  child: const Text('Register'),
                 ),
               ),
             ],

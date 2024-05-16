@@ -35,7 +35,7 @@ class ActivityManager {
       QuerySnapshot postSnapshot = await _firestore.collection('posts').get();
 
       DateTime currentDate = DateTime.now();
-      DateTime eightHoursAgo = currentDate.subtract(Duration(hours: 8));
+      DateTime eightHoursAgo = currentDate.subtract(const Duration(hours: 8));
 
       for (DocumentSnapshot postDoc in postSnapshot.docs) {
         List<String> postCategories = List<String>.from(postDoc.get('categories'));

@@ -14,7 +14,7 @@ import 'dart:io';
 class EditProfilePage extends StatefulWidget {
   final String? initialImageUrl;
 
-  EditProfilePage({Key? key, this.initialImageUrl}) : super(key: key);
+  const EditProfilePage({super.key, this.initialImageUrl});
 
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
@@ -126,12 +126,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         bottom: 0,
                         right: 0,
                         child: Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.white,
                           ),
                           child: IconButton(
-                            icon: Icon(Icons.edit, color: Colors.green),
+                            icon: const Icon(Icons.edit, color: Colors.green),
                             onPressed: _selectImageURLFromGallery,
                           ),
                         ),
@@ -217,13 +217,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     saveSettings();
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => ProfileScreen()),
+                      MaterialPageRoute(builder: (context) => const ProfileScreen()),
                     );
                   },
-                  child: const Text('Save Changes'),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green[800],
                       foregroundColor: Colors.white),
+                  child: const Text('Save Changes'),
                 ),
               ),
               Center(
@@ -231,7 +231,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 onPressed: () {
                   Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => ProfileScreen())
+                      MaterialPageRoute(builder: (context) => const ProfileScreen())
                   );
                 },
                   child: const Text('Cancel Changes',
@@ -276,7 +276,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => FavoritesPage()),
+                    MaterialPageRoute(builder: (context) => const FavoritesPage()),
                   );
                 },
                 child: Container(

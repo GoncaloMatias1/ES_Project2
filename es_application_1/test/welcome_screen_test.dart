@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import '../lib/welcome_screen.dart';
-import '../lib/authentication/register_screen.dart';
-import '../lib/authentication/login_screen.dart';
+import 'package:es_application_1/welcome_screen.dart';
+import 'package:es_application_1/authentication/register_screen.dart';
+import 'package:es_application_1/authentication/login_screen.dart';
 
 void main() {
   testWidgets('Widget displays correctly', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
+    await tester.pumpWidget(const MaterialApp(
       home: WelcomeScreen(),
     ));
 
@@ -17,7 +17,7 @@ void main() {
   });
 
   testWidgets('Tap on "Create Account" button navigates to RegisterScreen', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
+    await tester.pumpWidget(const MaterialApp(
       home: WelcomeScreen(),
     ));
 
@@ -28,7 +28,7 @@ void main() {
   });
 
   testWidgets('Tap on "I already have an account" button navigates to LoginScreen', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
+    await tester.pumpWidget(const MaterialApp(
       home: WelcomeScreen(),
     ));
 
