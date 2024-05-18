@@ -23,10 +23,10 @@ class _ChangeAreasPageState extends State<ChangeAreasPage> {
   void initState() {
     super.initState();
     _selectedDate = null;
-    _loadCategories();
+    loadCategories();
   }
 
-  Future<void> _loadCategories() async {
+  Future<void> loadCategories() async {
     try {
       DocumentSnapshot categoriesDoc = await FirebaseFirestore.instance.collection('categories').doc('categories').get();
       List<String> categories = List<String>.from(categoriesDoc.get('name'));
@@ -38,7 +38,7 @@ class _ChangeAreasPageState extends State<ChangeAreasPage> {
     }
   }
 
-  Future<void> _submitPersonalData(BuildContext context) async {
+  Future<void> submitPersonalData(BuildContext context) async {
     try {
       if (_firstNameController.text.isEmpty ||
           _lastNameController.text.isEmpty ||
@@ -83,7 +83,7 @@ class _ChangeAreasPageState extends State<ChangeAreasPage> {
     }
   }
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -128,7 +128,7 @@ class _ChangeAreasPageState extends State<ChangeAreasPage> {
             GestureDetector(
               onTap: () {
                 Future.microtask(() {
-                  _selectDate(context);
+                  selectDate(context);
                 });
               },
               child: AbsorbPointer(
@@ -152,7 +152,7 @@ class _ChangeAreasPageState extends State<ChangeAreasPage> {
             Row(
               children: [
                 ElevatedButton(
-                  onPressed: () => _submitPersonalData(context),
+                  onPressed: () => submitPersonalData(context),
                   child: const Text('Submit'),
                 ),
                 const SizedBox(width: 10),

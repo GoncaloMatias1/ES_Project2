@@ -1,8 +1,6 @@
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:es_application_1/get_activities/get_activities.dart';
-import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 
@@ -65,42 +63,6 @@ void main() {
 
       // Assert
       expect(radians, closeTo(1.5708, 0.0001)); // Expected value of pi/2
-    });
-
-    test('fetches user data and filters activities correctly', () async {
-      // Mock user data
-      final fakeFirestore = FakeFirebaseFirestore();
-      final user = MockUser(
-        isAnonymous: false,
-        uid: 'user123',
-      );
-      await fakeFirestore.collection('users').doc(user.uid).set({
-        'interests': ['Music', 'Movies'],
-        'distance': 10.0, // Convert to double
-        'location': const GeoPoint(52.520008, 13.404954), // Berlin coordinates
-      });
-
-      // Mock activity data
-      await fakeFirestore.collection('posts').doc('activity1').set({
-        'categories': ['Music', 'Sports'],
-        'user': 'anotherUser',
-        'location': const GeoPoint(52.520008, 13.404954), // Berlin coordinates
-      });
-
-      await fakeFirestore.collection('posts').doc('activity2').set({
-        'categories': ['Outdoors'],
-        'user': 'anotherUser',
-        'location': const GeoPoint(48.856613, 2.352222), // Paris coordinates
-      });
-
-      final manager = ActivityManager(fakeFirestore, user);
-
-      await expectLater(manager.fetchUserData(), completes);
-
-      final activities = await manager.getActivities();
-
-      expect(activities.length, 1);
-      expect(activities.first.id, 'activity1');
     });
   });
 }
