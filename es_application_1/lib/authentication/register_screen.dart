@@ -58,10 +58,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
     }
 
-    Navigator.pushReplacement(
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const PersonalDataPage()),
+      (Route<dynamic> route) => false,
     );
+
     
   } catch (e) {
     print('Failed to register user: $e');
