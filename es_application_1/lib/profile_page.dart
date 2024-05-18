@@ -238,7 +238,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 width: 200,
                                 margin: const EdgeInsets.symmetric(horizontal: 8),
                                 padding: const EdgeInsets.all(8),
-                                color: Colors.green[100],
+                                decoration: BoxDecoration(
+                                  color: Colors.green[100],
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 3,
+                                      blurRadius: 7,
+                                      offset: Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -324,7 +335,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         width: 200,
                                         margin: const EdgeInsets.symmetric(horizontal: 8),
                                         padding: const EdgeInsets.all(8),
-                                        color: Colors.green[100],
+                                        decoration: BoxDecoration(
+                                          color: Colors.green[100],
+                                          borderRadius: BorderRadius.circular(10),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.withOpacity(0.5),
+                                              spreadRadius: 3,
+                                              blurRadius: 7,
+                                              offset: Offset(0, 3),
+                                            ),
+                                          ],
+                                        ),
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
@@ -443,7 +465,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       width: 200,
                                       margin: const EdgeInsets.symmetric(horizontal: 8),
                                       padding: const EdgeInsets.all(8),
-                                      color: Colors.green[100],
+                                      decoration: BoxDecoration(
+                                        color: Colors.green[100],
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 3,
+                                            blurRadius: 7,
+                                            offset: Offset(0, 3),
+                                          ),
+                                        ],
+                                      ),
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
