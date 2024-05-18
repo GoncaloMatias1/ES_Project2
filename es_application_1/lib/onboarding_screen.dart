@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'welcome_screen.dart';
 
+// Some Tests Done
+
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -16,12 +18,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   List<Widget> _buildPageIndicator() {
     List<Widget> list = [];
     for (int i = 0; i < 3; i++) {
-      list.add(i == _currentPage ? _indicator(true) : _indicator(false));
+      list.add(i == _currentPage ? indicator(true) : indicator(false));
     }
     return list;
   }
 
-  Widget _indicator(bool isActive) {
+  Widget indicator(bool isActive) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
       margin: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -34,7 +36,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Future<void> _setOnboardingComplete() async {
+  Future<void> setOnboardingComplete() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('seenOnboarding', true);
   }
@@ -95,7 +97,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             )
                 : ElevatedButton(
               onPressed: () async {
-                await _setOnboardingComplete();
+                await setOnboardingComplete();
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (_) => const WelcomeScreen()),
                 );
