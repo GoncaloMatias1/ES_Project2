@@ -123,9 +123,10 @@ class _AskDistanceState extends State<AskDistance> {
               'location': userLocation,
             });
 
-            Navigator.pushReplacement(
+            Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => const MainPage()),
+              (Route<dynamic> route) => false,
             );
           } catch (e) {
             print('Error storing data: $e');

@@ -39,9 +39,10 @@ class _LoginScreenState extends State<LoginScreen> {
       await prefs.setString('password', password);
 
       // If login is successful, navigate to MainPage
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const MainPage()),
+        (Route<dynamic> route) => false,
       );
     } catch (e) {
       print('Failed to login: $e');

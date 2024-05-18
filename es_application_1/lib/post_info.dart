@@ -39,6 +39,11 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
     return now.isAfter(postDateTime);
   }
 
+  bool isBeforeActivityStart(DateTime activityStartTime) {
+    final DateTime now = DateTime.now();
+    return now.isBefore(activityStartTime);
+  }
+
   Future<Map<String, dynamic>> loadData(String activityId) async {
     final user = FirebaseAuth.instance.currentUser;
     final activitySnapshot = await FirebaseFirestore.instance.collection('posts').doc(activityId).get();
@@ -267,6 +272,7 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
             }
 
             final data = snapshot.data!;
+            final bool beforeActivityStart = isBeforeActivityStart(data['postTimestamp'].toDate());
             final LatLng activityLocation = LatLng(data['location'].latitude, data['location'].longitude);
 
             // Calculate whether the post has happened
@@ -402,22 +408,23 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
                             );
                           },
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            handleSubscribeButtonPress(widget.activityId, data['isSubscribed']);
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.green[200],
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              data['isSubscribed'] ? 'Unsubscribe' : 'Subscribe',
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        if (beforeActivityStart)
+                          GestureDetector(
+                            onTap: () {
+                              handleSubscribeButtonPress(widget.activityId, data['isSubscribed']);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.green[200],
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                data['isSubscribed'] ? 'Unsubscribe' : 'Subscribe',
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
-                        ),
                       ],
                     ),
                     const SizedBox(height: 16),
