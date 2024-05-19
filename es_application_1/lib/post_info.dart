@@ -408,7 +408,7 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
                             );
                           },
                         ),
-                        if (beforeActivityStart)
+                        if (beforeActivityStart && FirebaseAuth.instance.currentUser?.uid != data['ownerId'])
                           GestureDetector(
                             onTap: () {
                               handleSubscribeButtonPress(widget.activityId, data['isSubscribed']);
