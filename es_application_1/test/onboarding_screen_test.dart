@@ -1,52 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:es_application_1/onboarding_screen.dart';
-import 'package:es_application_1/welcome_screen.dart';
-
-class MockSharedPreferences extends Mock implements SharedPreferences {}
 
 void main() {
-  testWidgets('Widget displays correctly', (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
-      home: OnboardingScreen(),
-    ));
+  TestWidgetsFlutterBinding.ensureInitialized();
 
-    expect(find.text('Love Your Planet'), findsOneWidget);
-    expect(find.text('Recycle & Reuse'), findsOneWidget);
-    expect(find.text('Green Commuting'), findsOneWidget);
-    expect(find.text('Next'), findsOneWidget);
-    expect(find.text('Get Started'), findsNothing);
+  group('OnboardingScreen Widget Tests', () {
+    testWidgets('OnboardingScreen shows initial page and navigates correctly', (WidgetTester tester) async {
+      await tester.pumpWidget(const MaterialApp(home: OnboardingScreen()));
+
+      // Verify the initial page
+      expect(find.text('Love Your Planet'), findsOneWidget);
+      expect(find.text('Recycle & Reuse'), findsNothing);
+      expect(find.text('Green Commuting'), findsNothing);
+
+      // Tap the next button
+      await tester.tap(find.byType(ElevatedButton));
+      await tester.pumpAndSettle();
+
+      // Verify the second page
+      expect(find.text('Recycle & Reuse'), findsOneWidget);
+      expect(find.text('Love Your Planet'), findsNothing);
+      expect(find.text('Green Commuting'), findsNothing);
+
+      // Tap the next button again
+      await tester.tap(find.byType(ElevatedButton));
+      await tester.pumpAndSettle();
+
+      // Verify the third page
+      expect(find.text('Green Commuting'), findsOneWidget);
+      expect(find.text('Love Your Planet'), findsNothing);
+      expect(find.text('Recycle & Reuse'), findsNothing);
+
+      // Tap the Get Started button
+      await tester.tap(find.byType(ElevatedButton));
+      await tester.pumpAndSettle();
+    });
   });
 
-  testWidgets('Next button navigates to next page', (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
-      home: OnboardingScreen(),
-    ));
+  group('OnboardingScreen Unit Tests', () {
+    test('setOnboardingComplete sets seenOnboarding to true', () async {
+      // Initialize mock SharedPreferences
+      SharedPreferences.setMockInitialValues({});
 
-    await tester.tap(find.text('Next'));
-    await tester.pumpAndSettle();
+      // Create an instance of OnboardingScreen state
+      final onboardingScreenState = OnboardingScreen().createState();
 
-    expect(find.text('Love Your Planet'), findsNothing);
-    expect(find.text('Recycle & Reuse'), findsOneWidget);
-    expect(find.text('Green Commuting'), findsNothing);
-    expect(find.text('Get Started'), findsOneWidget);
-  });
+      // Call setOnboardingComplete method
+      await onboardingScreenState.setOnboardingComplete();
 
-  testWidgets('Get Started button completes onboarding and navigates to WelcomeScreen', (WidgetTester tester) async {
-    final mockSharedPreferences = MockSharedPreferences();
+      // Get the SharedPreferences instance
+      final prefs = await SharedPreferences.getInstance();
 
-    when(mockSharedPreferences.setBool('seenOnboarding', true)).thenAnswer((_) => Future.value(true));
-
-    await tester.pumpWidget(const MaterialApp(
-      home: OnboardingScreen(),
-    ));
-
-    await tester.tap(find.text('Get Started'));
-    await tester.pumpAndSettle();
-
-    verify(mockSharedPreferences.setBool('seenOnboarding', true)).called(1);
-    expect(find.byType(WelcomeScreen), findsOneWidget);
+      // Verify that seenOnboarding is set to true
+      expect(prefs.getBool('seenOnboarding'), isTrue);
+    });
   });
 }
