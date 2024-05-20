@@ -23,6 +23,7 @@ class ActivityDetailPage extends StatefulWidget {
 
 class ActivityDetailPageState extends State<ActivityDetailPage>{
   late bool postHasHappened;
+  late bool postHasFinnished;
 
   bool calculatePostHasHappened(Timestamp postTimestamp, String startTime) {
     DateTime postDate = postTimestamp.toDate();
@@ -283,6 +284,7 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
 
             // Calculate whether the post has happened
             postHasHappened = calculatePostHasHappened(data['postTimestamp'], data['startTime']);
+            postHasFinnished = calculatePostHasHappened(data['postTimestamp'], data['endTime']);
 
             return Padding(
               padding: const EdgeInsets.all(16.0),
@@ -434,7 +436,7 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
                       ],
                     ),
                     const SizedBox(height: 16),
-                    if (FirebaseAuth.instance.currentUser?.uid == data['ownerId'])
+                    if (FirebaseAuth.instance.currentUser?.uid == data['ownerId'] && !postHasFinnished)
                       ElevatedButton(
                         onPressed: () {
                           Navigator.push(
