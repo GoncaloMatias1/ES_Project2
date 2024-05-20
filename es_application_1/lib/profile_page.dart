@@ -379,7 +379,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: StreamBuilder<DocumentSnapshot>(
                     stream: FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).snapshots(),
                     builder: (context, userSnapshot) {
-                      if (userSnapshot.hasData ) {
+                      if (userSnapshot.hasData) {
                         try {
                           var subscribedPostsIds = List<String>.from(userSnapshot.data!['subscribed'] ?? []);
                           return StreamBuilder<QuerySnapshot>(
@@ -461,7 +461,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   },
                                 );
                               } else {
-                                return const Center(child: CircularProgressIndicator());
+                                return const Center(
+                                  child: Text(
+                                    'No subscribed posts available',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                );
                               }
                             },
                           );
