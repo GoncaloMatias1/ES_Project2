@@ -214,6 +214,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     );
                   },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                   child: const Text(
                     'Preferences',
                     style: TextStyle(color: Colors.green),
@@ -226,7 +233,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         MaterialPageRoute(
                             builder: (context) => ChangeLocation()),
                     );
-                }, child: const Text(
+                },
+                style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                child: const Text(
                   'Change Location',
                   style: TextStyle(color: Colors.green),
                 ),
@@ -238,7 +253,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       MaterialPageRoute(
                           builder: (context) => const ChangeAreasPage()),
                     );
-                  }, child: const Text(
+                  }, 
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
                   'Edit Profile',
                   style: TextStyle(color: Colors.green),
                 ),
