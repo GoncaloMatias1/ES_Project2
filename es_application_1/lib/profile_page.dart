@@ -36,6 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     loadSettings();
     loadProfilePicture();
     loadProfileName();
+    removeExpiredSubscribedPosts();
   }
 
   Future<void> loadSettings() async {
@@ -62,6 +63,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
     }catch(e){
 
+    }
+  }
+
+  Future<void> removeExpiredSubscribedPosts() async {
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .get();
+    
+    if (userDoc.exists && (userDoc.data() as Map<String, dynamic>).containsKey('subscribed')) {
+      List<String> subscribedPostsIds = List<String>.from((userDoc.data() as Map<String, dynamic>)['subscribed']);
+      List<String> updatedSubscribedPostsIds = [];
+
+      // Itera pelos IDs dos posts subscritos
+      for (String postId in subscribedPostsIds) {
+        DocumentSnapshot postDoc = await FirebaseFirestore.instance
+            .collection('posts')
+            .doc(postId)
+            .get();
+        
+        if (postDoc.exists) {
+          // Obtém o timestamp e a hora de fim do post
+          Timestamp postDate = postDoc['date'];
+          String postEndHour = postDoc['endTime'];
+
+          // Converte a hora de fim para DateTime
+          List<String> timeParts = postEndHour.split(':');
+          DateTime postEndDateTime = postDate.toDate().add(
+              Duration(hours: int.parse(timeParts[0]), minutes: int.parse(timeParts[1])));
+
+          // Verifica se o post já ocorreu
+          if (DateTime.now().isBefore(postEndDateTime)) {
+            updatedSubscribedPostsIds.add(postId);
+          }
+        }
+      }
+
+      // Atualiza o documento do usuário com a nova lista de IDs
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .update({'subscribed': updatedSubscribedPostsIds});
     }
   }
 
