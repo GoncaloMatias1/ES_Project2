@@ -23,6 +23,7 @@ class ActivityDetailPage extends StatefulWidget {
 
 class ActivityDetailPageState extends State<ActivityDetailPage>{
   late bool postHasHappened;
+  late bool postHasFinnished;
 
   bool calculatePostHasHappened(Timestamp postTimestamp, String startTime) {
     DateTime postDate = postTimestamp.toDate();
@@ -229,6 +230,7 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
       for (final userDoc in usersQuerySnapshot.docs) {
         final userPostIds = List<String>.from(userDoc.data()['subscribed'] ?? []);
         final userFavoriteIds = List<String>.from(userDoc.data()['favorites'] ?? []);
+        final userLikedIds = List<String>.from(userDoc.data()['liked'] ?? []);
 
         if (userPostIds.contains(widget.activityId)) {
           userPostIds.remove(widget.activityId);
@@ -238,6 +240,11 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
         if (userFavoriteIds.contains(widget.activityId)) {
           userFavoriteIds.remove(widget.activityId);
           await userDoc.reference.update({'favorites': userFavoriteIds});
+        }
+
+        if (userLikedIds.contains(widget.activityId)) {
+          userLikedIds.remove(widget.activityId);
+          await userDoc.reference.update({'liked': userLikedIds});
         }
 
         await userDoc.reference.update({'points': FieldValue.increment(-20)});
@@ -277,6 +284,7 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
 
             // Calculate whether the post has happened
             postHasHappened = calculatePostHasHappened(data['postTimestamp'], data['startTime']);
+            postHasFinnished = calculatePostHasHappened(data['postTimestamp'], data['endTime']);
 
             return Padding(
               padding: const EdgeInsets.all(16.0),
@@ -428,7 +436,7 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
                       ],
                     ),
                     const SizedBox(height: 16),
-                    if (FirebaseAuth.instance.currentUser?.uid == data['ownerId'])
+                    if (FirebaseAuth.instance.currentUser?.uid == data['ownerId'] && !postHasFinnished)
                       ElevatedButton(
                         onPressed: () {
                           Navigator.push(
