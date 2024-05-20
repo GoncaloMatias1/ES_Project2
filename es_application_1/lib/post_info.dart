@@ -229,6 +229,7 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
       for (final userDoc in usersQuerySnapshot.docs) {
         final userPostIds = List<String>.from(userDoc.data()['subscribed'] ?? []);
         final userFavoriteIds = List<String>.from(userDoc.data()['favorites'] ?? []);
+        final userLikedIds = List<String>.from(userDoc.data()['liked'] ?? []);
 
         if (userPostIds.contains(widget.activityId)) {
           userPostIds.remove(widget.activityId);
@@ -238,6 +239,11 @@ class ActivityDetailPageState extends State<ActivityDetailPage>{
         if (userFavoriteIds.contains(widget.activityId)) {
           userFavoriteIds.remove(widget.activityId);
           await userDoc.reference.update({'favorites': userFavoriteIds});
+        }
+
+        if (userLikedIds.contains(widget.activityId)) {
+          userLikedIds.remove(widget.activityId);
+          await userDoc.reference.update({'liked': userLikedIds});
         }
 
         await userDoc.reference.update({'points': FieldValue.increment(-20)});
