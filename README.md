@@ -95,7 +95,8 @@ Others were practically implemented, all that remains is to add the page-switchi
 ## Sprint 2
 
 ### Summary
- - During this sprint, we focused on implementing the logic to create and see posts. As we knew that the post feature would be hard to develop, we just added some other functionalities such as editing the profile picture, deleting the account and making tips to appear when the application is opened.
+ - During this sprint, we focused on implementing the logic to create and see posts. As we knew that the post feature would be hard to develop, we just
+added some other functionalities such as editing the profile picture, deleting the account and making tips to appear when the application is opened.
 Although we managed the time better than in Sprint 1, we still left some features to implement. From now on, since the most hard-working feature is done, we think that it will be possible to accomplish the planned functionalities in time.
 
 ### Implemented Functionalities
@@ -110,3 +111,19 @@ Although we managed the time better than in Sprint 1, we still left some feature
 
 ### Current progress
 ![Sprint 2 progress](images/template_sprint2.png)
+
+## Sprint 3
+
+### Summary
+- During this sprint we managed do implement all the features that we considered essential, keeping in mind the main goal of the application. In the end we are proud of the final version of the application and of the way the team worked.
+
+### Implemented Functionalities
+- ![Ranking fully operational](es_application_1/lib/ranking_page.dart)
+- ![Comment section under each post](es_application_1/lib/comments.dart)
+- ![Dashboard](es_application_1/lib/profile_page.dart)
+- ![Event confirmation](es_application_1/lib/event_confirmation.dart)
+- ![Edit profile fully operational](es_application_1/lib/profile_page.dart)
+
+
+### Current progress
+![Sprint 3 progress](images/sprint3.png)
