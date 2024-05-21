@@ -9,7 +9,7 @@ void main() {
     test('should return true if any category matches interests', () async {
       // Arrange
       final firestore = FakeFirebaseFirestore();
-      final manager = ActivityManager(firestore, null); // Pass null for user since we're not using it in this test
+      final manager = ActivityManager(firestore, null);
       await firestore.collection('users').add({
         'interests': ['Music', 'Movies'],
       });
@@ -24,7 +24,7 @@ void main() {
     test('should return false if no category matches interests', () async {
       // Arrange
       final firestore = FakeFirebaseFirestore();
-      final manager = ActivityManager(firestore, null); // Pass null for user since we're not using it in this test
+      final manager = ActivityManager(firestore, null);
       await firestore.collection('users').add({
         'interests': ['Music', 'Movies'],
       });
@@ -39,7 +39,7 @@ void main() {
     test('should calculate distance between two points accurately', () {
       // Arrange
       final firestore = FakeFirebaseFirestore();
-      final manager = ActivityManager(firestore, null); // Pass null for firestore and user since we're not using them in this test
+      final manager = ActivityManager(firestore, null);
       double userLat = 52.520008;
       double userLon = 13.404954;
       double activityLat = 48.856613;
@@ -55,7 +55,7 @@ void main() {
     test('should convert degrees to radians correctly', () {
       // Arrange
       final firestore = FakeFirebaseFirestore();
-      final manager = ActivityManager(firestore, null); // Pass null for firestore and user since we're not using them in this test
+      final manager = ActivityManager(firestore, null);
       double degrees = 90;
 
       // Act

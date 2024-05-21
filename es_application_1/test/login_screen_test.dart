@@ -22,5 +22,3 @@ void main() {
     });
   });
 }
-
-//flutter test test/login_screen_test.dart para rodar este teste
