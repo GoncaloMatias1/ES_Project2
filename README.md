@@ -31,14 +31,14 @@ The application aims to encourage the public to engage in environmentally benefi
 ### Features
 
 - Show sustainability activities in the user's region.
-- Filter the available activities by type, date, location and other criteria.
+- Filter the available activities by type, date, location, and other criteria.
 - Visualize photos and videos of the activities.
 - Notifications about new activities that fit into the user's interests.
-- Personalize notifications by type of activity, date, location and other criteria.
+- Personalize notifications by type of activity, date, location, and other criteria.
 - Give users rewards for engaging in activities.
 - Ranking of points for the users.
 - Rewards and motivation for the users with more points.
-- Interconnect users to discuss about sustainability.
+- Interconnect users to discuss sustainability.
 - Give advice to live in a more sustainable way. 
 
 
@@ -46,8 +46,8 @@ The application aims to encourage the public to engage in environmentally benefi
 
 ### Domain Model
 
-This domain model gives us the relationships between users, posts, notifications, news  and areas of interest of the application.
-Each user can create a post and subscribe to posts from other users to participate in the activities mentioned. The presence of a particular user in the subscribed activity is confirmed  by the author of the post. This is represented through the "participated" relationship. Each user also has the option to simply like a post and establish a friendship relation with another user.
+This domain model gives us the relationships between users, posts, notifications, news,  and areas of interest in the application.
+Each user can create a post and subscribe to posts from other users to participate in the activities mentioned. The presence of a particular user in the subscribed activity is confirmed  by the author of the post. This is represented through the "participated" relationship. Each user also has the option to simply like a post and establish a friendship relationship with another user.
 Posts are associated with up to four areas of interest to make it easier for each user to find the activities that interest them the most. Each user defines, at most, four areas of interest in their profile, which will be used in the activity filtering process.
 Users have the ability to share news they have found interesting, always related to the purpose of the application. These shares can be viewed on the user profile.
 Notifications will also be shown to users regarding activities that will take place.
@@ -58,11 +58,11 @@ Notifications will also be shown to users regarding activities that will take pl
 
 ### Logical Architeture
 
-* Our app's logical architecture consists of layers for user interface, app management logic, external services, and databases access. The user interface layer handles user interactions, while the app management logic provides core functionalities like ranking, post, user, and activity management. External services enhance our app's capabilities.
+* Our app's logical architecture consists of layers for user interface, app management logic, external services, and database access. The user interface layer handles user interactions, while the app management logic provides core functionalities like ranking, post, user, and activity management. External services enhance our app's capabilities.
 
 ![Logical Architeture](images/imageAL.png)
 
-### Physical Architeture
+### Physical Architecture
 
 * Our system's physical architecture comprises three main components: the Smartphone, the AppServer, and the GoogleServer. The smartphone hosts the Flutter app with a local SQL database for offline data storage. The AppServer hosts the application logic and database using Dart language and a NoSQL database, while the GoogleServer provides GPS Services API for location-related functionalities. This architecture enables efficient communication between the user's device, the application server, and external services for a seamless user experience.
 
@@ -77,7 +77,7 @@ Notifications will also be shown to users regarding activities that will take pl
 ## Sprint 1
 
 ### Summary
- - During this sprint we managed to implement some of the planned user stories, however, as some turned out to be more complex than initially anticipated, we were not able to implement everything. 
+ - During this sprint, we managed to implement some of the planned user stories, however, as some turned out to be more complex than initially anticipated, we were not able to implement everything. 
 Others were practically implemented, all that remains is to add the page-switching logic. Now that we know what went wrong in sprint 1, we want to improve and avoid making the same mistakes.
 
 ### Implemented Functionalities
@@ -96,7 +96,7 @@ Others were practically implemented, all that remains is to add the page-switchi
 
 ### Summary
  - During this sprint, we focused on implementing the logic to create and see posts. As we knew that the post feature would be hard to develop, we just
-added some other functionalities such as editing the profile picture, deleting the account and making tips to appear when the application is opened.
+added some other functionalities such as editing the profile picture, deleting the account, and making tips appear when the application is opened.
 Although we managed the time better than in Sprint 1, we still left some features to implement. From now on, since the most hard-working feature is done, we think that it will be possible to accomplish the planned functionalities in time.
 
 ### Implemented Functionalities
@@ -115,7 +115,8 @@ Although we managed the time better than in Sprint 1, we still left some feature
 ## Sprint 3
 
 ### Summary
-- During this sprint we managed do implement all the features that we considered essential, keeping in mind the main goal of the application. In the end we are proud of the final version of the application and of the way the team worked.
+- During this sprint we managed to implement all the features that we considered essential, keeping in mind the main goal of the application and also improving some of the previous ones. In the end, we are proud of the final version of the application and the teamwork.
+- To sum up, we loved the project as a whole, not just because it was challenging but because it taught us a lot about how important it is to have a united team, working with the same goal and organizing everything before starting to do it.
 
 ### Implemented Functionalities
 - ![Ranking fully operational](es_application_1/lib/ranking_page.dart)
